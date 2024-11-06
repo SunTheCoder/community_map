@@ -1,0 +1,22 @@
+# .gitignore
+
+# Environment and configuration files
+.env
+
+# Python virtual environments
+venv/
+
+# Compiled Python files
+*.pyc
+__pycache__/
+
+# Database files
+*.db
+
+# IDE and editor-specific files
+.vscode/
+*.sublime-workspace
+*.sublime-project
+
+# Flask-migrate migrations
+migrations/
