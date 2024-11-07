@@ -8,6 +8,7 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
     password_hash = db.Column(db.String(128), nullable=False)
+    zip_code = db.Column(db.String(10), nullable=False)
 
     def set_password(self, password):
         self.password_hash = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
@@ -19,7 +20,8 @@ class User(db.Model):
         return {
             "id": self.id,
             "username": self.username,
-            "password_hash": self.password_hash
+            "password_hash": self.password_hash,
+            "zip_code": self.zip_code
         }
             
 
@@ -34,6 +36,15 @@ class Resource(db.Model):
     comments = db.Column(db.Text)
     accuracy = db.Column(db.Boolean, default=False)
     community_verified = db.Column(db.Boolean, default=False)
+    description = db.Column(db.Text)
+    votes_accuracy = db.Column(db.Integer, default=0)
+    votes_verified = db.Column(db.Integer, default=0)
+    coordinates = db.Column(db.String(100))
+    street_address = db.Column(db.String(200))
+    city = db.Column(db.String(100))
+    state = db.Column(db.String(100))
+    zip_code = db.Column(db.String(10), nullable=False)
+    phone_number = db.Column(db.String(20))
 
     def serialize(self):
         return {
@@ -45,6 +56,15 @@ class Resource(db.Model):
             "comments": self.comments,
             "accuracy": self.accuracy,
             "community_verified": self.community_verified,
+            "description": self.description,
+            "votes_accuracy": self.votes_accuracy,
+            "votes_verified": self.votes_verified,
+            "coordinates": self.coordinates,
+            "street_address": self.street_address,
+            "city": self.city,
+            "state": self.state,
+            "zip_code": self.zip_code,
+            "phone_number": self.phone_number
         }
 
 class Notification(db.Model):
