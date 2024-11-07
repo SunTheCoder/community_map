@@ -10,12 +10,12 @@ const ChakraPlayground = () => {
       <Text fontSize="2xl" fontWeight="bold">
         Chakra UI Styling Playground
       </Text>
-      <Button colorScheme="teal" size="lg" onClick={toggleColorMode}>
-        Toggle {colorMode === 'light' ? 'Dark' : 'Light'} Mode
+      <Button w={20} h={6} colorScheme="teal"  fontSize={10} onClick={toggleColorMode}>
+        {colorMode === 'light' ? 'Dark' : 'Light'} Theme
       </Button>
       <Box
         bg={colorMode === 'light' ? 'gray.100' : 'gray.700'}
-        p={6}
+        p={1}
         borderRadius="md"
         boxShadow="xl"
       >
