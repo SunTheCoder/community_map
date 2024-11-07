@@ -1,0 +1,38 @@
+# Node modules
+node_modules/
+
+# Build files
+dist/                # For Vite builds
+build/               # For CRA builds
+
+# Local environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS-specific files
+.DS_Store             # macOS
+Thumbs.db             # Windows
+.idea/                # JetBrains IDEs
+.vscode/              # Visual Studio Code settings
+*.swp                 # Swap files
+
+# Cache
+.cache/               # Common cache folder
+*.cache               # Cache files in the root directory
+*.tmp                 # Temporary files
+
+# Testing
+coverage/             # Coverage reports
+
+# Miscellaneous
+*.log                 # Log files
+*.bak                 # Backup files
+public/mockServiceWorker.js # For MSW if used for API mocking
