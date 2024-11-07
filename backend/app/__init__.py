@@ -2,6 +2,7 @@ from flask import Flask
 # from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_cors import CORS
+from flask_jwt_extended import JWTManager
 import click
 from .models import db, Resource, User
 from dotenv import load_dotenv
@@ -18,6 +19,8 @@ def create_app():
     app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
     app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URI')
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY')  # Change to a strong secret key
+    jwt = JWTManager(app)
 
     # Initialize extensions
     db.init_app(app)
@@ -25,8 +28,10 @@ def create_app():
     CORS(app)
 
     # Import and register blueprints
-    from .routes import resource_bp
+    from .routes import resource_bp, user_bp
     app.register_blueprint(resource_bp, url_prefix='/api')
+   
+    app.register_blueprint(user_bp, url_prefix='/api')
 
     @app.cli.command("seed")
     @click.option("--resources", is_flag=True, help="Seed resource data")
