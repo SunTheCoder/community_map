@@ -16,3 +16,11 @@
 - React
 - Redux
 - Axios
+- Chakra UI
+
+#### Libraries
+
+- Leaflet
+
+
+

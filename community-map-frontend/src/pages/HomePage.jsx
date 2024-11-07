@@ -1,6 +1,7 @@
 // src/pages/HomePage.jsx
 import React, { useState } from 'react';
 import AddResourceModal from '../components/Modals/AddResourceModal';
+import ChakraPlayground from '../components/ChakraPlayground';
 
 const HomePage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -15,6 +16,7 @@ const HomePage = () => {
       
       {/* Render the AddResourceModal and pass isOpen and onClose props */}
       <AddResourceModal isOpen={isModalOpen} onClose={closeModal} />
+      <ChakraPlayground/>
     </div>
   );
 };
