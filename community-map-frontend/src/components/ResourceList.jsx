@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import api from '../../api';  // Import the custom Axios instance
+import api from '../frontend/my-app/src/api';  // Import the custom Axios instance
 import './ResourceList.css';  // Import the CSS file for styling
 
 const ResourceList = () => {
