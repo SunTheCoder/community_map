@@ -1,4 +1,5 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, current_app
+import traceback
 from .models import db, Resource, User, Notification
 from flask_jwt_extended import create_access_token
 from flask_jwt_extended import jwt_required, get_jwt_identity
@@ -111,3 +112,28 @@ def login():
 def protected():
     current_user_id = get_jwt_identity()
     return jsonify({"message": f"Access granted to user {current_user_id}"}), 200
+
+
+@user_bp.route('/users/<int:user_id>', methods=['DELETE'])
+def delete_user(user_id):
+    try:
+        user = User.query.get(user_id)
+        
+        if not user:
+            return jsonify({"error": "User not found"}), 404
+        
+        db.session.delete(user)
+        db.session.commit()
+
+        return jsonify({"message": "User deleted"}), 200
+    except Exception as e:
+        db.session.rollback()
+        current_app.logger.error(f"Error deleting user {user_id}: {str(e)}")
+        current_app.logger.error(traceback.format_exc())
+        return jsonify({"error": "An error occurred while deleting the user"}), 500
+
+
+@user_bp.route('/users', methods=['GET'])
+def get_users():    
+    users = User.query.all()
+    return jsonify([user.serialize() for user in users])
