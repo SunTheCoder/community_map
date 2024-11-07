@@ -21,7 +21,7 @@ def create_resource():
         location=data['location'],
         type=data['type'],
         accessibility=data.get('accessibility'),
-        comments=data.get('comments')
+        zip_code=data['zip_code']
     )
     db.session.add(new_resource)
     db.session.commit()

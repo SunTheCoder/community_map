@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import api from '../frontend/my-app/src/api';  // Import the custom Axios instance
-import './ResourceList.css';  // Import the CSS file for styling
+import api from '../api/api';  // Import the custom Axios instance
+// import './ResourceList.css';  // Import the CSS file for styling
 
 const ResourceList = () => {
     const [resources, setResources] = useState([]);
@@ -15,13 +15,13 @@ const ResourceList = () => {
     console.log('Resources:', resources);
     return (
         <div>
-            <h2>Resource List</h2>
+            {/* <h2>Resource List</h2> */}
             {resources.map(resource => (
                 console.log('Resource:', resource),  // Log the resource for debugging purposes
                 <div key={resource.id}>
                     <h3>{resource.name}</h3>
                     <h4>{resource.type}</h4>
-                    <p>{resource.comments}</p>
+                    <p>{resource.zip_code}</p>
                 </div>
             ))}
         </div>

@@ -62,6 +62,7 @@ import React, { useState } from 'react';
 import { Box, Flex, Button, Input, FormControl, FormLabel, useColorModeValue } from "@chakra-ui/react";
 
 const AddResourceModal = ({ isOpen, onClose, onSave }) => {
+  // Hook: useState to manage resource data
   const [resourceData, setResourceData] = useState({
     name: '',
     location: '',
@@ -79,9 +80,19 @@ const AddResourceModal = ({ isOpen, onClose, onSave }) => {
     phone_number: '',
   });
 
+  // Hook: theme-aware background colors
+  const bgColor = useColorModeValue("white", "gray.700");
+  const overlayBg = useColorModeValue("rgba(0, 0, 0, 0.5)", "rgba(255, 255, 255, 0.1)");
+
+  // Event handlers
   const handleChange = (e) => {
-    setResourceData({ ...resourceData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setResourceData({
+      ...resourceData,
+      [name]: name === "zip_code" ? String(value) : value, // Ensure zip_code is a string
+    });
   };
+  
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -89,13 +100,8 @@ const AddResourceModal = ({ isOpen, onClose, onSave }) => {
     onClose();
   };
 
+  // Early return if modal is not open
   if (!isOpen) return null;
-
-  // Use theme-aware styles for dark mode
-  const bgColor = useColorModeValue("white", "gray.700");
-  const overlayBg = useColorModeValue("rgba(0, 0, 0, 0.5)", "rgba(255, 255, 255, 0.1)");
-//   const inputBorderColor = useColorModeValue("gray.300", "gray.600");
-//   const inputTextColor = useColorModeValue("black", "white");
 
   return (
     <Flex
@@ -123,10 +129,6 @@ const AddResourceModal = ({ isOpen, onClose, onSave }) => {
             <FormLabel>Name</FormLabel>
             <Input type="text" name="name" placeholder="Name" onChange={handleChange} />
           </FormControl>
-          {/* <FormControl isRequired>
-            <FormLabel>Location</FormLabel>
-            <Input type="text" name="location" placeholder="Location" onChange={handleChange} />
-          </FormControl> */}
           <FormControl isRequired>
             <FormLabel>Type</FormLabel>
             <Input type="text" name="type" placeholder="Type" onChange={handleChange} />
@@ -135,18 +137,6 @@ const AddResourceModal = ({ isOpen, onClose, onSave }) => {
             <FormLabel>Accessibility</FormLabel>
             <Input type="text" name="accessibility" placeholder="Accessibility" onChange={handleChange} />
           </FormControl>
-          {/* <FormControl>
-            <FormLabel>Comments</FormLabel>
-            <Input type="text" name="comments" placeholder="Comments" onChange={handleChange} />
-          </FormControl> */}
-          {/* <FormControl>
-            <FormLabel>Description</FormLabel>
-            <Input type="text" name="description" placeholder="Description" onChange={handleChange} />
-          </FormControl> */}
-          {/* <FormControl>
-            <FormLabel>Coordinates</FormLabel>
-            <Input type="text" name="coordinates" placeholder="Coordinates" onChange={handleChange} />
-          </FormControl> */}
           <FormControl>
             <FormLabel>Street Address</FormLabel>
             <Input type="text" name="street_address" placeholder="Street Address" onChange={handleChange} />
@@ -161,12 +151,8 @@ const AddResourceModal = ({ isOpen, onClose, onSave }) => {
           </FormControl>
           <FormControl isRequired>
             <FormLabel>Zip Code</FormLabel>
-            <Input type="text" name="zip_code" placeholder="Zip Code" onChange={handleChange} />
+            <Input type="number" name="zip_code" placeholder="Zip Code" onChange={handleChange} />
           </FormControl>
-          {/* <FormControl>
-            <FormLabel>Phone Number</FormLabel>
-            <Input type="text" name="phone_number" placeholder="Phone Number" onChange={handleChange} />
-          </FormControl> */}
           <Button type="submit" colorScheme="blue" mt={4}>Save Resource</Button>
         </form>
       </Box>
