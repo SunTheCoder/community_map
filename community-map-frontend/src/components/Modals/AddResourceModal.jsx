@@ -139,10 +139,10 @@ const AddResourceModal = ({ isOpen, onClose, onSave }) => {
             <FormLabel>Comments</FormLabel>
             <Input type="text" name="comments" placeholder="Comments" onChange={handleChange} />
           </FormControl> */}
-          <FormControl>
+          {/* <FormControl>
             <FormLabel>Description</FormLabel>
             <Input type="text" name="description" placeholder="Description" onChange={handleChange} />
-          </FormControl>
+          </FormControl> */}
           {/* <FormControl>
             <FormLabel>Coordinates</FormLabel>
             <Input type="text" name="coordinates" placeholder="Coordinates" onChange={handleChange} />
