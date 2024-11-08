@@ -13,19 +13,31 @@ import SimpleMap from '../components/SimpleMap';
 
 const HomePage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [resources, setResources] = useState([]); // State for storing resources
 
 //   const apiUrl = import.meta.env.VITE_API_URL;
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
-  const dispatch = useDispatch();
-  const resources = useSelector((state) => state.resources.resourceList);
+//   const dispatch = useDispatch();
+//   const resources = useSelector((state) => state.resources.resourceList);
 
-  useEffect(() => {
-    dispatch(fetchResources()); // Fetch resources on mount
-  }, [dispatch]);
+//   useEffect(() => {
+//     dispatch(fetchResources()); // Fetch resources on mount
+//   }, [dispatch]);
+useEffect(() => {
+    const fetchResources = async () => {
+      try {
+        const response = await api.get('/resources');
+        setResources(response.data); // Update the resources state with the fetched data
+      } catch (error) {
+        console.error("Error fetching resources:", error);
+      }
+    };
 
+    fetchResources();
+  }, []);
   
 
   const handleSave = async (resourceData) => {
