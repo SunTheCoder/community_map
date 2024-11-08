@@ -23,4 +23,11 @@
 - Leaflet
 
 
+### Future Features
+
+- Databases based on Geo-location
+- Facial Recognition Features (on consent and only on consent)
+- Stripe (or other system) for community investment
+
+
 
