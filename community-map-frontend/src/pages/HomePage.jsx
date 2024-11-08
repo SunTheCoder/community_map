@@ -1,11 +1,15 @@
 // src/pages/HomePage.jsx
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import api from '../api/api';  // Use the custom Axios instance
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchResources } from '../features/resourceSlice';
+import CommunityMap from '../components/CommunityMap';
 
 import AddResourceModal from '../components/Modals/AddResourceModal';
 import ChakraPlayground from '../components/ChakraPlayground';
 import { Box, Button, HStack, Text, VStack, useColorMode } from '@chakra-ui/react';
 import Header from '../components/Header';
+import SimpleMap from '../components/SimpleMap';
 
 const HomePage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -14,6 +18,13 @@ const HomePage = () => {
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
+
+  const dispatch = useDispatch();
+  const resources = useSelector((state) => state.resources.resourceList);
+
+  useEffect(() => {
+    dispatch(fetchResources()); // Fetch resources on mount
+  }, [dispatch]);
 
   
 
@@ -40,6 +51,9 @@ const HomePage = () => {
       <ChakraPlayground/>
       <Button fontSize={12} h={6}  onClick={openModal}>Add Resource</Button>
     </VStack>
+
+    <CommunityMap resources={resources} />
+    {/* <SimpleMap/>/ */}
     </>
   );
 };

@@ -72,7 +72,8 @@ const AddResourceModal = ({ isOpen, onClose, onSave }) => {
     description: '',
     votes_accuracy: 0,
     votes_verified: 0,
-    coordinates: '',
+    latitude: '',
+    longitude: '',
     street_address: '',
     city: '',
     state: '',
@@ -140,6 +141,16 @@ const AddResourceModal = ({ isOpen, onClose, onSave }) => {
           <FormControl>
             <FormLabel>Street Address</FormLabel>
             <Input type="text" name="street_address" placeholder="Street Address" onChange={handleChange} />
+          </FormControl>
+          <FormControl>
+            <FormLabel>Latitude</FormLabel>
+            <Input type="number" name="latitude"  step="0.000001" // Allows six decimal places
+    placeholder="e.g., 37.7749" onChange={handleChange} />
+          </FormControl>
+          <FormControl>
+            <FormLabel>Longitude</FormLabel>
+            <Input type="number" name="longitude"  step="0.000001" // Allows six decimal places
+    placeholder="e.g., 37.7749" onChange={handleChange} />
           </FormControl>
           <FormControl>
             <FormLabel>City</FormLabel>

@@ -10,7 +10,9 @@ const AddResourceModal = ({ isOpen, onClose, onSave }) => {
     description: '',
     votes_accuracy: 0,
     votes_verified: 0,
-    coordinates: '',
+    latitude: '',
+    longitude: '',
+
     street_address: '',
     city: '',
     state: '',
@@ -41,7 +43,8 @@ const AddResourceModal = ({ isOpen, onClose, onSave }) => {
           <input type="text" name="accessibility" placeholder="Accessibility" onChange={handleChange} />
           <input type="text" name="comments" placeholder="Comments" onChange={handleChange} />
           <input type="text" name="description" placeholder="Description" onChange={handleChange} />
-          <input type="text" name="coordinates" placeholder="Coordinates" onChange={handleChange} />
+          <input type="text" name="longitude" placeholder="Longitude" onChange={handleChange} />
+          <input type="text" name="latitude" placeholder="Latitude" onChange={handleChange} />
           <input type="text" name="street_address" placeholder="Street Address" onChange={handleChange} />
           <input type="text" name="city" placeholder="City" onChange={handleChange} />
           <input type="text" name="state" placeholder="State" onChange={handleChange} />

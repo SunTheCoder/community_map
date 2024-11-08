@@ -21,7 +21,9 @@ def create_resource():
         location=data['location'],
         type=data['type'],
         accessibility=data.get('accessibility'),
-        zip_code=data['zip_code']
+        zip_code=data['zip_code'],
+        latitude=data['latitude'],
+        longitude=data['longitude']
     )
     db.session.add(new_resource)
     db.session.commit()

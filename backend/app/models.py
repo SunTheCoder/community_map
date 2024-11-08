@@ -39,7 +39,8 @@ class Resource(db.Model):
     description = db.Column(db.Text)
     votes_accuracy = db.Column(db.Integer, default=0)
     votes_verified = db.Column(db.Integer, default=0)
-    coordinates = db.Column(db.String(100))
+    latitude = db.Column(db.Float, nullable=False)  # Separate latitude field
+    longitude = db.Column(db.Float, nullable=False)  # Separate longitude field
     street_address = db.Column(db.String(200))
     city = db.Column(db.String(100))
     state = db.Column(db.String(100))
@@ -59,13 +60,15 @@ class Resource(db.Model):
             "description": self.description,
             "votes_accuracy": self.votes_accuracy,
             "votes_verified": self.votes_verified,
-            "coordinates": self.coordinates,
+            "latitude": self.latitude,
+            "longitude": self.longitude,
             "street_address": self.street_address,
             "city": self.city,
             "state": self.state,
             "zip_code": self.zip_code,
             "phone_number": self.phone_number
         }
+
 
 class Notification(db.Model):
     __tablename__ = 'notifications'
