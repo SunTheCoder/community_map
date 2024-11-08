@@ -22,6 +22,10 @@
 
 - Leaflet
 
+#### Extras
+
+- OpenCage for geocoding
+
 
 ### Future Features
 
