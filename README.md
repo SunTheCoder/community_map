@@ -18,14 +18,14 @@
 - Axios
 - Chakra UI
 
-#### Libraries
+#### Libraries/APIs
 
 - Leaflet
-
-#### Extras
-
 - OpenCage for geocoding
 
+#### In Development
+
+- IndexedDB for offline access ✊🏾
 
 ### Future Features
 
