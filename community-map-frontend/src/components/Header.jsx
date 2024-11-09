@@ -64,23 +64,25 @@ const Header = () => {
           <TabList>
             <Tab flex="1">Home</Tab>
             <Tab flex="1">About</Tab>
-            <Tab flex="1">Login</Tab>
+            {/* <Tab flex="1">Login</Tab> */}
             <Tab flex="1">Contact</Tab>
             <Tab flex="1">Resources</Tab>
           </TabList>
           <TabPanels>
             <TabPanel>
-              <Text textAlign="center">Welcome!</Text>
+              {/* <Text textAlign="center">Welcome!</Text> */}
+              {/* login component */}
+              <LoginSignupForm/>
             </TabPanel>
             <TabPanel>
-              <Text textAlign="center" w={350}>"Empowering Communities, Honoring Legacy"
+                <VStack>
+              <Text  textAlign='center' w={400} fontSize={20} m={5}>"Empowering Communities, Honoring Legacy"</Text>
 
-This map platform is designed to put the power of local knowledge and resources into the hands of the community, giving people greater sovereignty and control over their environment. Inspired by the resilience and vision of our ancestors—especially remarkable Black women like Fannie Lou Hamer and Harriet Tubman—this project seeks to carry forward their legacy of strength, community, and empowerment.</Text>
+                <Text  textAlign='center' w={400}>This map platform is designed to put the power of local knowledge and resources into the hands of the community, giving people greater sovereignty and control over their environment. Inspired by the resilience and vision of our ancestors—especially remarkable Black women like Fannie Lou Hamer and Harriet Tubman—this project seeks to carry forward their legacy of strength, community, and empowerment.</Text></VStack>
             </TabPanel>
-            <TabPanel>
-                {/* login component */}
-                <LoginSignupForm/>
-            </TabPanel>
+            {/* <TabPanel>
+                
+            </TabPanel> */}
 
             <TabPanel>
               <Text textAlign="center">Email: admin@communitymap.com</Text>
