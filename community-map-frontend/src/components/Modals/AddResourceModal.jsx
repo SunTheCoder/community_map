@@ -58,9 +58,11 @@
 // export default AddResourceModal;
 
 
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Box, Flex, Button, Input, FormControl, FormLabel, useColorModeValue } from "@chakra-ui/react";
 import axios from 'axios';
+import debounce from 'lodash.debounce';
+
 
 const AddResourceModal = ({ isOpen, onClose, onSave }) => {
   // Hook: useState to manage resource data
@@ -123,6 +125,9 @@ const AddResourceModal = ({ isOpen, onClose, onSave }) => {
       console.error("Error fetching coordinates:", error);
     }
   };
+
+  // Debounced function to prevent frequent API calls
+  const debouncedFetchCoordinates = useCallback(debounce(fetchCoordinates, 500), [resourceData]);
   
 
   // Event handlers
@@ -133,9 +138,20 @@ const AddResourceModal = ({ isOpen, onClose, onSave }) => {
       [name]: name === "zip_code" ? String(value) : value, // Ensure zip_code is a string
     }));
 
-    if (["street_address", "city", "state", "zip_code"].includes(name)) {
-      // Call the geocoding API after a slight delay to reduce API calls
-      setTimeout(fetchCoordinates, 500);
+    // if (["street_address", "city", "state", "zip_code"].includes(name)) {
+    //   // Call the geocoding API after a slight delay to reduce API calls
+    //   setTimeout(fetchCoordinates, 500);
+    // }
+
+    // Check if all required address fields have at least 3 characters
+    const { street_address, city, state, zip_code } = resourceData;
+    if (
+      street_address.length >= 3 &&
+      city.length >= 3 &&
+      state.length >= 2 &&
+      zip_code.length >= 3
+    ) {
+      debouncedFetchCoordinates();
     }
   };
   
