@@ -189,13 +189,24 @@ const AddResourceModal = ({ isOpen, onClose, onSave }) => {
           </FormControl>
           <FormControl>
             <FormLabel>Latitude</FormLabel>
-            <Input type="number" name="latitude"  step="0.000001" // Allows six decimal places
-    value={resourceData.latitude || ''} placeholder="e.g., 37.7749" onChange={handleChange} />
+            <Input 
+                type="number" 
+                name="latitude"  
+                step="0.000001" // Allows six decimal places
+                value={resourceData.latitude || ''} 
+                placeholder="e.g., 37.7749" 
+                onChange={handleChange} 
+            />
           </FormControl>
           <FormControl>
             <FormLabel>Longitude</FormLabel>
-            <Input type="number" name="longitude"  step="0.000001" // Allows six decimal places
-    value={resourceData.longitude || ''} placeholder="e.g., 37.7749" onChange={handleChange} />
+            <Input 
+                type="number" name="longitude"  
+                step="0.000001" // Allows six decimal places
+                value={resourceData.longitude || ''} 
+                placeholder="e.g., 37.7749" 
+                onChange={handleChange} 
+            />
           </FormControl>
           <FormControl>
             <FormLabel>City</FormLabel>

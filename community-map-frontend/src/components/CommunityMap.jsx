@@ -73,8 +73,8 @@ const CommunityMap = ({ resources }) => {
     onChange={(e) => setStreet(e.target.value)}
     placeholder="Street Address"
     padding="8px"
-    width="45%"
-    mr="2"
+    width="30"
+    // mr="2"
   />
   <Input
     type="text"
@@ -82,7 +82,7 @@ const CommunityMap = ({ resources }) => {
     onChange={(e) => setCity(e.target.value)}
     placeholder="City"
     padding="8px"
-    width="25%"
+    width="30"
     mr="2"
     />
     
@@ -92,7 +92,7 @@ const CommunityMap = ({ resources }) => {
     onChange={(e) => setState(e.target.value)}
     placeholder="State"
     padding="8px"
-    width="10%"
+    width="30"
     mr="2"
     />
   <Input
@@ -101,7 +101,7 @@ const CommunityMap = ({ resources }) => {
     onChange={(e) => setZipCode(e.target.value)}
     placeholder="Zip Code"
     padding="8px"
-    width="15%"
+    width="30"
     />
   
   <Button onClick={handleGeocode} padding="8px" ml="2">Find Location</Button>
@@ -116,7 +116,7 @@ const CommunityMap = ({ resources }) => {
       </div>
 
       {/* Map Container */}
-      <div id="map-container" style={{ width: '100%', height: '400px' }}>
+      <div id="map-container" style={{ width: '400px', height: '400px' , justifySelf: 'center'}}>
         <MapContainer center={mapCenter} zoom={zoomLevel} style={{ height: '400px', width: '100%' }}>
           <MapViewUpdater center={mapCenter} zoom={zoomLevel} />
 

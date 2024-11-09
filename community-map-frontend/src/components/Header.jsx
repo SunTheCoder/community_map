@@ -1,5 +1,5 @@
 import React from "react";
-import { Tabs, TabList, Tab, TabPanels, TabPanel, useColorMode, Button, HStack, Flex, VStack } from "@chakra-ui/react";
+import { Tabs, TabList, Tab, TabPanels, TabPanel, useColorMode, Button, HStack, Flex, VStack, Text, Center, Box } from "@chakra-ui/react";
 import ResourceList from "./ResourceList";
 
 
@@ -29,17 +29,19 @@ const Header= () => {
             </TabList>
             <TabPanels>
                 <TabPanel>
-                    <p>Welcome!</p>
+                    <Text textAlign='center'>Welcome!</Text>
 
                 </TabPanel>
                 <TabPanel>
-                    <p>About the Community Map</p>
+                    <Text textAlign='center'>About the Community Map</Text>
                 </TabPanel>
                 <TabPanel>
-                    <p>Contact the Community Map</p>
+                    <Text textAlign='center'>admin@communitymap.com</Text>
                 </TabPanel>
                 <TabPanel>
-                    <ResourceList/>
+                    <Box justifySelf='center'>
+                        <ResourceList/>
+                    </Box>
                 </TabPanel>
             </TabPanels>
         </Tabs>
