@@ -5,6 +5,7 @@ import api from '../api/api';
 import CommunityMap from "./CommunityMap";
 import AddResourceModal from "./Modals/AddResourceModal";
 import FindLocation from "./FindLocation";
+import LoginSignupForm from "./LoginSignupForm";
 
 const Header = () => {
   const { colorMode, toggleColorMode } = useColorMode();
@@ -63,6 +64,7 @@ const Header = () => {
           <TabList>
             <Tab flex="1">Home</Tab>
             <Tab flex="1">About</Tab>
+            <Tab flex="1">Login</Tab>
             <Tab flex="1">Contact</Tab>
             <Tab flex="1">Resources</Tab>
           </TabList>
@@ -75,6 +77,11 @@ const Header = () => {
 
 This map platform is designed to put the power of local knowledge and resources into the hands of the community, giving people greater sovereignty and control over their environment. Inspired by the resilience and vision of our ancestors—especially remarkable Black women like Fannie Lou Hamer and Harriet Tubman—this project seeks to carry forward their legacy of strength, community, and empowerment.</Text>
             </TabPanel>
+            <TabPanel>
+                {/* login component */}
+                <LoginSignupForm/>
+            </TabPanel>
+
             <TabPanel>
               <Text textAlign="center">Email: admin@communitymap.com</Text>
             </TabPanel>

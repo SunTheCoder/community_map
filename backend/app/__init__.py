@@ -30,10 +30,12 @@ def create_app():
     CORS(app)
 
     # Import and register blueprints
-    from .routes import resource_bp, user_bp
+    from .routes import resource_bp, user_bp, auth_bp
     app.register_blueprint(resource_bp, url_prefix='/api')
    
     app.register_blueprint(user_bp, url_prefix='/api')
+
+    app.register_blueprint(auth_bp, url_prefix='/api')
 
     @app.cli.command("seed")
     @click.option("--resources", is_flag=True, help="Seed resource data")

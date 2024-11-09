@@ -1,0 +1,145 @@
+// import React, { useState } from 'react';
+// import axios from 'axios';
+// import { Box, Button, Input, FormControl, FormLabel, Heading, Text, VStack } from '@chakra-ui/react';
+
+// const LoginSignupForm = () => {
+//   const [username, setUsername] = useState('');
+//   const [password, setPassword] = useState('');
+//   const [error, setError] = useState('');
+//   const [isLogin, setIsLogin] = useState(true);
+
+//   const handleSubmit = async (e) => {
+//     e.preventDefault();
+
+//     try {
+//       const endpoint = isLogin ? '/login' : '/register';
+//       const response = await axios.post(endpoint, { username, password });
+
+//       if (isLogin) {
+//         console.log("Login successful:", response.data.access_token);
+//       } else {
+//         console.log(response.data.message);
+//       }
+
+//       setError('');
+//     } catch (err) {
+//       setError(err.response?.data?.message || "An error occurred");
+//     }
+//   };
+
+//   return (
+//     <Box maxW="sm" mx="auto" p={6} boxShadow="lg" borderRadius="md">
+//       <Heading as="h2" size="lg" textAlign="center" mb={4}>
+//         {isLogin ? 'Login' : 'Sign Up'}
+//       </Heading>
+//       <form onSubmit={handleSubmit}>
+//         <VStack spacing={4}>
+//           <FormControl isRequired>
+//             <FormLabel>Username</FormLabel>
+//             <Input
+//               type="text"
+//               value={username}
+//               onChange={(e) => setUsername(e.target.value)}
+//               placeholder="Username"
+//             />
+//           </FormControl>
+//           <FormControl isRequired>
+//             <FormLabel>Password</FormLabel>
+//             <Input
+//               type="password"
+//               value={password}
+//               onChange={(e) => setPassword(e.target.value)}
+//               placeholder="Password"
+//             />
+//           </FormControl>
+//           {error && <Text color="red.500">{error}</Text>}
+//           <Button type="submit" colorScheme="teal" width="full">
+//             {isLogin ? 'Login' : 'Sign Up'}
+//           </Button>
+//         </VStack>
+//       </form>
+//       <Button
+//         onClick={() => setIsLogin(!isLogin)}
+//         mt={4}
+//         variant="link"
+//         colorScheme="teal"
+//         display="block"
+//         mx="auto"
+//       >
+//         {isLogin ? 'Need an account? Sign Up' : 'Already have an account? Login'}
+//       </Button>
+//     </Box>
+//   );
+// };
+
+// export default LoginSignupForm;
+
+
+import React, { useState } from 'react';
+import axios from 'axios';
+import { Box, Button, Input, FormControl, FormLabel, Heading, Text, VStack } from '@chakra-ui/react';
+
+const LoginSignupForm = () => {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [zipCode, setZipcode] = useState('');
+  const [error, setError] = useState('');
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+        console.log('Submitting form:', username, password, zipCode); // Debugging message
+        const response = await axios.post(`${import.meta.env.VITE_API_URL}/auth`, { username, password, zipCode });
+      console.log(response.data.message); // Success message for login or signup
+      setError('');
+    } catch (err) {
+      setError(err.response?.data?.message || "An error occurred");
+    }
+  };
+
+  return (
+    <Box maxW="sm" mx="auto" p={6} boxShadow="lg" borderRadius="md">
+      <Heading as="h2" size="lg" textAlign="center" mb={4}>
+        Welcome
+      </Heading>
+      <form onSubmit={handleSubmit}>
+        <VStack spacing={4}>
+          <FormControl isRequired>
+            <FormLabel>Username</FormLabel>
+            <Input
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              placeholder="Username"
+            />
+          </FormControl>
+          <FormControl isRequired>
+            <FormLabel>Password</FormLabel>
+            <Input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Password"
+            />
+          </FormControl>
+          <FormControl isRequired>
+            <FormLabel>ZIP Code</FormLabel>
+            <Input
+              type="zipcode"
+              value={zipCode}
+              onChange={(e) => setZipcode(e.target.value)}
+              placeholder="ZIP Code"
+            />
+          </FormControl>
+          {error && <Text color="red.500">{error}</Text>}
+          <Button type="submit" colorScheme="teal" width="full">
+            Continue
+          </Button>
+        </VStack>
+      </form>
+    </Box>
+  );
+};
+
+export default LoginSignupForm;
