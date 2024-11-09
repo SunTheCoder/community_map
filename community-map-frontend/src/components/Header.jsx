@@ -10,11 +10,9 @@ const Header = () => {
   const { colorMode, toggleColorMode } = useColorMode();
   const [resources, setResources] = useState([]); // State for storing resources
   const [isModalOpen, setIsModalOpen] = useState(false);
-  
+
   // Shared state for map center and zoom level
-  const [mapCenter, setMapCenter] = useState(
-    resources.length ? [parseFloat(resources[0].latitude), parseFloat(resources[0].longitude)] : [51.505, -0.09]
-  );
+  const [mapCenter, setMapCenter] = useState([51.505, -0.09]); // Initialize with a default value
   const [zoomLevel, setZoomLevel] = useState(13);
 
   const openModal = () => setIsModalOpen(true);
@@ -30,6 +28,12 @@ const Header = () => {
       try {
         const response = await api.get('/resources');
         setResources(response.data); // Update the resources state with the fetched data
+
+        // Update map center if there are resources available
+        if (response.data.length > 0) {
+          const firstResource = response.data[0];
+          setMapCenter([parseFloat(firstResource.latitude), parseFloat(firstResource.longitude)]);
+        }
       } catch (error) {
         console.error("Error fetching resources:", error);
       }
@@ -77,11 +81,11 @@ const Header = () => {
                 <div>
                   <FindLocation resources={resources} updateMapCenter={updateMapCenter} />
                 </div>
-                <Button  onClick={openModal}>Add Resource</Button>
+                <Button onClick={openModal}>Add Resource</Button>
               </VStack>
               <AddResourceModal isOpen={isModalOpen} onClose={closeModal} onSave={handleSave} />
               <Box justifySelf="center">
-                <Text fontSize={22} fontWeight='bold'>Resource List:</Text>
+                <Text fontSize={22} fontWeight="bold">Resource List:</Text>
                 <ResourceList />
               </Box>
             </TabPanel>
