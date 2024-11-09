@@ -84,10 +84,16 @@ const Header = () => {
               {/* login component */}
               {/* <LoginSignupForm/> */}
               {token ? (
-                        <>
-                        <p>Welcome, {user.username}!</p>
-                        <button onClick={handleLogout}>Log Out</button>
-                        </>
+                       <>
+                       <VStack spacing={4} align="center">
+                           <Text fontSize="lg" fontWeight="bold">
+                               Welcome, {user}!
+                           </Text>
+                           <Button colorScheme="teal" onClick={handleLogout}>
+                               Log Out
+                           </Button>
+                       </VStack>
+                   </>
                     ) : (
                         <LoginSignupForm/>
                     )}
