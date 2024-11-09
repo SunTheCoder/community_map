@@ -61,10 +61,10 @@ useEffect(() => {
     <AddResourceModal isOpen={isModalOpen} onClose={closeModal} onSave={handleSave}/>
       {/* Render the AddResourceModal and pass isOpen and onClose props */}
       {/* <ChakraPlayground/> */}
-      <Button m={2} onClick={openModal}>Add Resource</Button>
+      {/* <Button m={2} onClick={openModal}>Add Resource</Button> */}
     </VStack>
 
-    <CommunityMap resources={resources} />
+    {/* <CommunityMap resources={resources} /> */}
     {/* <SimpleMap/>/ */}
     </>
   );
