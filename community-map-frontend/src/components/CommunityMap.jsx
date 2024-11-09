@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, useMap, } from 'react-leaflet';
+import { Box, Input, Button, VStack, HStack } from '@chakra-ui/react';
 import { Icon } from 'leaflet';
 import axios from 'axios';
 
@@ -62,38 +63,50 @@ const CommunityMap = ({ resources }) => {
 
   return (
     <div>
-      {/* Address input fields */}
-      <div style={{ marginBottom: '10px' }}>
-        <input
-          type="text"
-          value={street}
-          onChange={(e) => setStreet(e.target.value)}
-          placeholder="Street Address"
-          style={{ padding: '8px', width: '45%', marginRight: '5px' }}
-        />
-        <input
-          type="text"
-          value={city}
-          onChange={(e) => setCity(e.target.value)}
-          placeholder="City"
-          style={{ padding: '8px', width: '25%', marginRight: '5px' }}
-        />
-        <input
-          type="text"
-          value={state}
-          onChange={(e) => setState(e.target.value)}
-          placeholder="State"
-          style={{ padding: '8px', width: '10%', marginRight: '5px' }}
-        />
-        <input
-          type="text"
-          value={zipCode}
-          onChange={(e) => setZipCode(e.target.value)}
-          placeholder="Zip Code"
-          style={{ padding: '8px', width: '15%' }}
-        />
-        <button onClick={handleGeocode} style={{ padding: '8px', marginLeft: '5px' }}>Find Location</button>
-      </div>
+      
+
+{/* Address input fields */}
+<VStack mb="4">
+  <Input
+    type="text"
+    value={street}
+    onChange={(e) => setStreet(e.target.value)}
+    placeholder="Street Address"
+    padding="8px"
+    width="45%"
+    mr="2"
+  />
+  <Input
+    type="text"
+    value={city}
+    onChange={(e) => setCity(e.target.value)}
+    placeholder="City"
+    padding="8px"
+    width="25%"
+    mr="2"
+    />
+    
+  <Input
+    type="text"
+    value={state}
+    onChange={(e) => setState(e.target.value)}
+    placeholder="State"
+    padding="8px"
+    width="10%"
+    mr="2"
+    />
+  <Input
+    type="text"
+    value={zipCode}
+    onChange={(e) => setZipCode(e.target.value)}
+    placeholder="Zip Code"
+    padding="8px"
+    width="15%"
+    />
+  
+  <Button onClick={handleGeocode} padding="8px" ml="2">Find Location</Button>
+    </VStack>
+
 
       {/* Display coordinates */}
       <div style={{ marginBottom: '10px' }}>
