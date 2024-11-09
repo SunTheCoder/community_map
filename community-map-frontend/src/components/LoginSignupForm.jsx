@@ -105,7 +105,7 @@ const LoginSignupForm = () => {
 
      
       console.log('Token:', token); // Token for authenticated requests
-      dispatch(setCredentials({ token, user, is_admin })); // Store user credentials in Redux store
+      dispatch(setCredentials({ token, user, isAdmin: is_admin })); // Store user credentials in Redux store
       setError('');
     } catch (err) {
       setError(err.response?.data?.message || "An error occurred");

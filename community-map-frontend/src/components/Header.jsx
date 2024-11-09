@@ -9,6 +9,7 @@ import CommunityMap from "./CommunityMap";
 import AddResourceModal from "./Modals/AddResourceModal";
 import FindLocation from "./FindLocation";
 import LoginSignupForm from "./LoginSignupForm";
+import AdminPanel from "./AdminPanel";
 
 const Header = () => {
   const { colorMode, toggleColorMode } = useColorMode();
@@ -86,6 +87,8 @@ const Header = () => {
               {token ? (
                        <>
                        <VStack spacing={4} align="center">
+
+                            <AdminPanel/>
                            <Text fontSize="lg" fontWeight="bold">
                                Welcome, {user}!
                            </Text>
