@@ -1,19 +1,29 @@
-import React, {useState, useEffect} from "react";
-import { Tabs, TabList, Tab, TabPanels, TabPanel, useColorMode, Button, HStack, Flex, VStack, Text, Center, Box } from "@chakra-ui/react";
+import React, { useState, useEffect } from "react";
+import { Tabs, TabList, Tab, TabPanels, TabPanel, useColorMode, Button, VStack, Text, Box, Flex } from "@chakra-ui/react";
 import ResourceList from "./ResourceList";
-// import AddResourceModal from "./AddResourceModal";
 import api from '../api/api';
 import CommunityMap from "./CommunityMap";
 import AddResourceModal from "./Modals/AddResourceModal";
+import FindLocation from "./FindLocation";
 
-
-const Header= () => {
+const Header = () => {
   const { colorMode, toggleColorMode } = useColorMode();
   const [resources, setResources] = useState([]); // State for storing resources
   const [isModalOpen, setIsModalOpen] = useState(false);
+  
+  // Shared state for map center and zoom level
+  const [mapCenter, setMapCenter] = useState(
+    resources.length ? [parseFloat(resources[0].latitude), parseFloat(resources[0].longitude)] : [51.505, -0.09]
+  );
+  const [zoomLevel, setZoomLevel] = useState(13);
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
+
+  const updateMapCenter = (lat, lng, zoom = 15) => {
+    setMapCenter([lat, lng]);
+    setZoomLevel(zoom);
+  };
 
   useEffect(() => {
     const fetchResources = async () => {
@@ -30,71 +40,57 @@ const Header= () => {
 
   const handleSave = async (resourceData) => {
     try {
-      const response = await api.post('/resources', resourceData); // Use api instance here
+      const response = await api.post('/resources', resourceData);
       console.log("Resource saved successfully:", response.data);
-      // Optionally, close the modal or reset state here
       closeModal();
     } catch (error) {
       console.error("Error saving resource:", error);
     }
   };
 
-    return (
-    //     <HStack spacing={4} align="center">
-    //         <h1>Community Map</h1>
-    //         <h2>Welcome to the Community Map</h2>
-    //         <Button w={20} h={6} colorScheme="teal"  fontSize={10} onClick={toggleColorMode}>
-    //     {colorMode === 'light' ? 'Dark' : 'Light'} Theme
-    //   </Button>
-    //    </HStack>
+  return (
     <>
-    <Button w={20} h={6} colorScheme="teal"  fontSize={10} onClick={toggleColorMode}>
-                {colorMode === 'light' ? 'Dark' : 'Light'} Theme
+      <Button w={20} h={6} colorScheme="teal" fontSize={10} onClick={toggleColorMode}>
+        {colorMode === 'light' ? 'Dark' : 'Light'} Theme
       </Button>
-    <VStack>
-    <h1 >Community Map</h1>
-        <Tabs variant="soft-rounded" colorScheme="teal" p={15} >
-            
-            <TabList>
-                <Tab flex="1">Home</Tab>
-                <Tab flex="1">About</Tab>
-                <Tab flex="1">Contact</Tab>
-                <Tab flex="1">Resources</Tab>
-                
-            </TabList>
-            <TabPanels>
-                <TabPanel>
-                    <Text textAlign='center'>Welcome!</Text>
-                    <VStack>
-                        <Button m={2} onClick={openModal}>Add Resource</Button>
-                    </VStack>
-                    <div>
-                    <CommunityMap resources={resources} /></div>
-
-    <AddResourceModal isOpen={isModalOpen} onClose={closeModal} onSave={handleSave}/>
-
-                </TabPanel>
-                <TabPanel>
-                    <Text textAlign='center'>About the Community Map</Text>
-                </TabPanel>
-                <TabPanel>
-                    <Text textAlign='center'>admin@communitymap.com</Text>
-                </TabPanel>
-                <TabPanel>
-                    <Box justifySelf='center'>
-                        <ResourceList/>
-                    </Box>
-                </TabPanel>
-            </TabPanels>
+      <VStack>
+        <h1>Community Map</h1>
+        <Tabs variant="soft-rounded" colorScheme="teal" p={15}>
+          <TabList>
+            <Tab flex="1">Home</Tab>
+            <Tab flex="1">About</Tab>
+            <Tab flex="1">Contact</Tab>
+            <Tab flex="1">Resources</Tab>
+          </TabList>
+          <TabPanels>
+            <TabPanel>
+              <Text textAlign="center">Welcome!</Text>
+            </TabPanel>
+            <TabPanel>
+              <Text textAlign="center">About the Community Map</Text>
+            </TabPanel>
+            <TabPanel>
+              <Text textAlign="center">admin@communitymap.com</Text>
+            </TabPanel>
+            <TabPanel>
+              <VStack>
+                <div>
+                  <FindLocation resources={resources} updateMapCenter={updateMapCenter} />
+                </div>
+                <Button m={2} onClick={openModal}>Add Resource</Button>
+              </VStack>
+              <AddResourceModal isOpen={isModalOpen} onClose={closeModal} onSave={handleSave} />
+              <Box justifySelf="center">
+                <ResourceList />
+              </Box>
+            </TabPanel>
+          </TabPanels>
         </Tabs>
-        <Flex direction="row" align="center" gap={20} p={15} my={8}>
-            
-            {/* <h2>Welcome to the Community Map</h2> */}
-            
-       </Flex>
-       </VStack>
-       </>
-    )
-}
+        <Flex direction="row" align="center" gap={20} p={15} my={8} />
+      </VStack>
+      <CommunityMap resources={resources} mapCenter={mapCenter} zoomLevel={zoomLevel} />
+    </>
+  );
+};
 
 export default Header;

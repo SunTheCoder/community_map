@@ -14,9 +14,9 @@ const MapViewUpdater = ({ center, zoom }) => {
   return null;
 };
 
-const CommunityMap = ({ resources }) => {
-  const [mapCenter, setMapCenter] = useState(resources.length ? [parseFloat(resources[0].latitude), parseFloat(resources[0].longitude)] : [51.505, -0.09]);
-  const [zoomLevel, setZoomLevel] = useState(13); // Initialize with both state and setter for zoom
+const CommunityMap = ({ resources, mapCenter, zoomLevel }) => {
+//   const [mapCenter, setMapCenter] = useState(resources.length ? [parseFloat(resources[0].latitude), parseFloat(resources[0].longitude)] : [51.505, -0.09]);
+//   const [zoomLevel, setZoomLevel] = useState(13); // Initialize with both state and setter for zoom
   const [latitude, setLatitude] = useState(null); // State for latitude to display
   const [longitude, setLongitude] = useState(null); // State for longitude to display
 
@@ -28,11 +28,11 @@ const CommunityMap = ({ resources }) => {
 
   const OPEN_CAGE_API_KEY = import.meta.env.VITE_OPEN_CAGE_API_KEY; // Replace with your OpenCage API key
 
-  useEffect(() => {
-    if (resources.length > 0) {
-      setMapCenter([parseFloat(resources[0].latitude), parseFloat(resources[0].longitude)]);
-    }
-  }, [resources]);
+//   useEffect(() => {
+//     if (resources.length > 0) {
+//       setMapCenter([parseFloat(resources[0].latitude), parseFloat(resources[0].longitude)]);
+//     }
+//   }, [resources]);
 
   const handleGeocode = async () => {
     // Combine address components into a single string
@@ -65,7 +65,7 @@ const CommunityMap = ({ resources }) => {
     <div>
       
 
-{/* Address input fields */}
+{/* Address input fields
 <VStack mb="4">
   <Input
     type="text"
@@ -105,7 +105,7 @@ const CommunityMap = ({ resources }) => {
     />
   
   <Button onClick={handleGeocode} padding="8px" ml="2">Find Location</Button>
-    </VStack>
+    </VStack> */}
 
 
       {/* Display coordinates */}
