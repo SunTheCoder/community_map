@@ -78,12 +78,17 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { Box, Button, Input, FormControl, FormLabel, Heading, Text, VStack } from '@chakra-ui/react';
+import { useDispatch } from 'react-redux';
+import { setCredentials } from '../features/authSlice';
+
 
 const LoginSignupForm = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [zipCode, setZipcode] = useState('');
   const [error, setError] = useState('');
+  const dispatch = useDispatch();
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -92,6 +97,15 @@ const LoginSignupForm = () => {
         console.log('Submitting form:', username, password, zipCode); // Debugging message
         const response = await axios.post(`${import.meta.env.VITE_API_URL}/auth`, { username, password, zipCode });
       console.log(response.data.message); // Success message for login or signup
+      console.log('User:', response.data); // User data
+    //   const { token, user, message } = response.data;
+      const token = response.data.access_token; // Token for authenticated requests
+      const user = response.data.username; // User data
+      const is_admin = response.data.is_admin; // Whether the user is an admin or not
+
+     
+      console.log('Token:', token); // Token for authenticated requests
+      dispatch(setCredentials({ token, user, is_admin })); // Store user credentials in Redux store
       setError('');
     } catch (err) {
       setError(err.response?.data?.message || "An error occurred");

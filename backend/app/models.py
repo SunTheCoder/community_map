@@ -9,6 +9,8 @@ class User(db.Model):
     username = db.Column(db.String(80), unique=True, nullable=False)
     password_hash = db.Column(db.String(128), nullable=False)
     zip_code = db.Column(db.String(10), nullable=False)
+    is_admin = db.Column(db.Boolean, default=False)  # New field for admin status
+
 
     def set_password(self, password):
         self.password_hash = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
@@ -21,7 +23,8 @@ class User(db.Model):
             "id": self.id,
             "username": self.username,
             "password_hash": self.password_hash,
-            "zip_code": self.zip_code
+            "zip_code": self.zip_code,
+            "is_admin": self.is_admin 
         }
             
 

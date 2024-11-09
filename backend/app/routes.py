@@ -162,6 +162,13 @@ def get_users():
     users = User.query.all()
     return jsonify([user.serialize() for user in users])
 
+@user_bp.route('/delete-all-users', methods=['DELETE'])
+def delete_all_users():
+    db.session.query(User).delete()
+    db.session.commit()
+    return jsonify({"message": "All users deleted"}), 200
+
+
 
 @auth_bp.route('/auth', methods=['POST'])
 def auth():
@@ -172,7 +179,7 @@ def auth():
     print(zip_code)
 
     # Check if the username and password are provided
-    if not username or not password:
+    if not username or not password or not zip_code:
         return jsonify({"error": "Username, password, and ZIP code are required"}), 400
 
     # Check if the user already exists
@@ -182,7 +189,7 @@ def auth():
         # Attempt login if user exists
         if user.check_password(password):
             access_token = create_access_token(identity=user.id)
-            return jsonify({"message": "Login successful", "access_token": access_token}), 200
+            return jsonify({"message": "Login successful", "access_token": access_token, "username": username, "is_admin": user.is_admin}), 200
         else:
             return jsonify({"error": "Invalid password"}), 401
     else:

@@ -1,4 +1,7 @@
 import React, { useState, useEffect } from "react";
+import { useSelector, useDispatch } from 'react-redux';
+import { logout } from '../features/authSlice';
+
 import { Tabs, TabList, Tab, TabPanels, TabPanel, useColorMode, Button, VStack, Text, Box, Flex } from "@chakra-ui/react";
 import ResourceList from "./ResourceList";
 import api from '../api/api';
@@ -11,6 +14,9 @@ const Header = () => {
   const { colorMode, toggleColorMode } = useColorMode();
   const [resources, setResources] = useState([]); // State for storing resources
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const { token, user } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
 
   // Shared state for map center and zoom level
   const [mapCenter, setMapCenter] = useState([51.505, -0.09]); // Initialize with a default value
@@ -53,6 +59,10 @@ const Header = () => {
     }
   };
 
+  const handleLogout = () => {
+    dispatch(logout());
+  };
+
   return (
     <>
       <Button w={20} h={6} colorScheme="teal" fontSize={10} onClick={toggleColorMode}>
@@ -72,7 +82,15 @@ const Header = () => {
             <TabPanel>
               {/* <Text textAlign="center">Welcome!</Text> */}
               {/* login component */}
-              <LoginSignupForm/>
+              {/* <LoginSignupForm/> */}
+              {token ? (
+                        <>
+                        <p>Welcome, {user.username}!</p>
+                        <button onClick={handleLogout}>Log Out</button>
+                        </>
+                    ) : (
+                        <LoginSignupForm/>
+                    )}
             </TabPanel>
             <TabPanel>
                 <VStack>
@@ -94,7 +112,7 @@ const Header = () => {
                 </div>
                 <Button onClick={openModal}>Add Resource</Button>
               </VStack>
-              <AddResourceModal isOpen={isModalOpen} onClose={closeModal} onSave={handleSave} />
+                <AddResourceModal isOpen={isModalOpen} onClose={closeModal} onSave={handleSave} />
               <Box justifySelf="center">
                 <Text fontSize={22} fontWeight="bold">Resource List:</Text>
                 <ResourceList />
