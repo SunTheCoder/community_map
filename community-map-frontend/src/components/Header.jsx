@@ -73,14 +73,15 @@ const Header = () => {
               <Text textAlign="center">admin@communitymap.com</Text>
             </TabPanel>
             <TabPanel>
-              <VStack>
+              <VStack m={2}>
                 <div>
                   <FindLocation resources={resources} updateMapCenter={updateMapCenter} />
                 </div>
-                <Button m={2} onClick={openModal}>Add Resource</Button>
+                <Button  onClick={openModal}>Add Resource</Button>
               </VStack>
               <AddResourceModal isOpen={isModalOpen} onClose={closeModal} onSave={handleSave} />
               <Box justifySelf="center">
+                <Text fontSize={22} fontWeight='bold'>Resource List:</Text>
                 <ResourceList />
               </Box>
             </TabPanel>
