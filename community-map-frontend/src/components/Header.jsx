@@ -58,7 +58,7 @@ const Header = () => {
         {colorMode === 'light' ? 'Dark' : 'Light'} Theme
       </Button>
       <VStack>
-        <h1>Community Map</h1>
+        <h1 style={{fontSize: '40px'}}>Community Map</h1>
         <Tabs variant="soft-rounded" colorScheme="teal" p={15}>
           <TabList>
             <Tab flex="1">Home</Tab>
@@ -71,10 +71,12 @@ const Header = () => {
               <Text textAlign="center">Welcome!</Text>
             </TabPanel>
             <TabPanel>
-              <Text textAlign="center">About the Community Map</Text>
+              <Text textAlign="center" w={350}>"Empowering Communities, Honoring Legacy"
+
+This map platform is designed to put the power of local knowledge and resources into the hands of the community, giving people greater sovereignty and control over their environment. Inspired by the resilience and vision of our ancestors—especially remarkable Black women like Fannie Lou Hamer and Harriet Tubman—this project seeks to carry forward their legacy of strength, community, and empowerment.</Text>
             </TabPanel>
             <TabPanel>
-              <Text textAlign="center">admin@communitymap.com</Text>
+              <Text textAlign="center">Email: admin@communitymap.com</Text>
             </TabPanel>
             <TabPanel>
               <VStack m={2}>

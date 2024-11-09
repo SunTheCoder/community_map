@@ -12,6 +12,8 @@ const ResourceList = () => {
            .catch(error => console.error(error));
     }, []);
 
+  
+
     console.log('Resources:', resources);
     return (
         <div>
@@ -22,6 +24,7 @@ const ResourceList = () => {
                     <h3>{resource.name}</h3>
                     <h4>{resource.type}</h4>
                     <p>{resource.zip_code}</p>
+                    Community Verified: {resource.community_verified ? '✓' : '✗'}
                 </div>
             ))}
         </div>
