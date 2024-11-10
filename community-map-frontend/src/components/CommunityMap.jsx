@@ -15,8 +15,12 @@ const MapViewUpdater = ({ center, zoom }) => {
 };
 
 const CommunityMap = ({ resources, mapCenter, zoomLevel }) => {
-//   const [mapCenter, setMapCenter] = useState(resources.length ? [parseFloat(resources[0].latitude), parseFloat(resources[0].longitude)] : [51.505, -0.09]);
+  // const [mapCenter, setMapCenter] = useState(resources.length ? [parseFloat(resources[0].latitude), parseFloat(resources[0].longitude)] : [51.505, -0.09]);
 //   const [zoomLevel, setZoomLevel] = useState(13); // Initialize with both state and setter for zoom
+const isValidLatLng = (lat, lng) => typeof lat === "number" && !isNaN(lat) && typeof lng === "number" && !isNaN(lng);
+const validMapCenter = isValidLatLng(mapCenter[0], mapCenter[1]) ? mapCenter : [51.505, -0.09];
+
+
   const [latitude, setLatitude] = useState(null); // State for latitude to display
   const [longitude, setLongitude] = useState(null); // State for longitude to display
 
@@ -34,32 +38,32 @@ const CommunityMap = ({ resources, mapCenter, zoomLevel }) => {
 //     }
 //   }, [resources]);
 
-  const handleGeocode = async () => {
-    // Combine address components into a single string
-    const fullAddress = `${street}, ${city}, ${state} ${zipCode}`;
+  // const handleGeocode = async () => {
+  //   // Combine address components into a single string
+  //   const fullAddress = `${street}, ${city}, ${state} ${zipCode}`;
     
-    try {
-      const response = await axios.get(`https://api.opencagedata.com/geocode/v1/json`, {
-        params: {
-          q: fullAddress,
-          key: OPEN_CAGE_API_KEY,
-        },
-      });
+  //   try {
+  //     const response = await axios.get(`https://api.opencagedata.com/geocode/v1/json`, {
+  //       params: {
+  //         q: fullAddress,
+  //         key: OPEN_CAGE_API_KEY,
+  //       },
+  //     });
       
-      if (response.data.results.length > 0) {
-        const { lat, lng } = response.data.results[0].geometry;
-        setMapCenter([lat, lng]); // Update the map center to the geocoded location
-        setLatitude(lat); // Set the latitude to display to the user
-        setLongitude(lng); // Set the longitude to display to the user
-        setZoomLevel(15); // Optional: zoom in on the location
-      } else {
-        alert('Address not found. Please try again.');
-      }
-    } catch (error) {
-      console.error("Geocoding error:", error);
-      alert('Error fetching location. Please try again.');
-    }
-  };
+  //     if (response.data.results.length > 0) {
+  //       const { lat, lng } = response.data.results[0].geometry;
+  //       setMapCenter([lat, lng]); // Update the map center to the geocoded location
+  //       setLatitude(lat); // Set the latitude to display to the user
+  //       setLongitude(lng); // Set the longitude to display to the user
+  //       setZoomLevel(15); // Optional: zoom in on the location
+  //     } else {
+  //       alert('Address not found. Please try again.');
+  //     }
+  //   } catch (error) {
+  //     console.error("Geocoding error:", error);
+  //     alert('Error fetching location. Please try again.');
+  //   }
+  // };
 
   return (
     <div>
@@ -109,16 +113,16 @@ const CommunityMap = ({ resources, mapCenter, zoomLevel }) => {
 
 
       {/* Display coordinates */}
-      <div style={{ marginBottom: '10px' }}>
+      {/* <div style={{ marginBottom: '10px' }}>
         {latitude && longitude && (
           <p>Latitude: {latitude.toFixed(6)}, Longitude: {longitude.toFixed(6)}</p>
         )}
-      </div>
+      </div> */}
 
       {/* Map Container */}
       <div id="map-container" style={{ width: '1100px', height: '800px' , justifySelf: 'center'}}>
         <MapContainer center={mapCenter} zoom={zoomLevel} style={{ height: '800px', width: '1100px' }}>
-          <MapViewUpdater center={mapCenter} zoom={zoomLevel} />
+          <MapViewUpdater center={validMapCenter} zoom={zoomLevel} />
 
           <TileLayer
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -126,22 +130,33 @@ const CommunityMap = ({ resources, mapCenter, zoomLevel }) => {
           />
 
           {/* Display markers for each resource */}
-          {resources.map(resource => (
-            <Marker
-              key={resource.id}
-              position={[parseFloat(resource.latitude), parseFloat(resource.longitude)]} // Ensure coordinates are parsed as floats
-              icon={new Icon({
-                iconUrl: 'https://leafletjs.com/examples/custom-icons/leaf-green.png',
-                iconSize: [25, 41],
-                iconAnchor: [12, 41],
-              })}
-            >
-              <Popup>
-                <h3>{resource.name}</h3>
-                <p>{resource.type}</p>
-              </Popup>
-            </Marker>
-          ))}
+          {resources.map(resource => {
+  const lat = parseFloat(resource.latitude);
+  const lng = parseFloat(resource.longitude);
+
+  if (!isValidLatLng(lat, lng)) {
+    console.warn(`Invalid coordinates for resource ${resource.id}:`, lat, lng);
+    return null; // Skip rendering this marker if coordinates are invalid
+  }
+
+  return (
+    <Marker
+      key={resource.id}
+      position={[lat, lng]}
+      icon={new Icon({
+        iconUrl: 'https://leafletjs.com/examples/custom-icons/leaf-green.png',
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+      })}
+    >
+      <Popup>
+        <h3>{resource.name}</h3>
+        <p>{resource.type}</p>
+      </Popup>
+    </Marker>
+  );
+})}
+
         </MapContainer>
       </div>
     </div>
