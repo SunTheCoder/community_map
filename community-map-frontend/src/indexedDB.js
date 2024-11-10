@@ -17,9 +17,14 @@ export const saveResource = async (resource, isSynced = false) => {
 };
 
 export const saveUserData = async (user) => {
-  const db = await dbPromise;
-  return db.put('userData', user);
-};
+    try {
+      const db = await dbPromise;
+      return db.put('userData', user);
+    } catch (error) {
+      console.error("Failed to save user data:", error);
+    }
+  };
+  
 
 export const getResources = async () => {
   const db = await dbPromise;

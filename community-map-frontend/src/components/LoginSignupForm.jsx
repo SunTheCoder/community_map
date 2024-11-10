@@ -80,6 +80,7 @@ import axios from 'axios';
 import { Box, Button, Input, FormControl, FormLabel, Heading, Text, VStack } from '@chakra-ui/react';
 import { useDispatch } from 'react-redux';
 import { setCredentials } from '../features/authSlice';
+import { saveUserData } from '../indexedDB'; // Function to save user data in local storage
 
 
 const LoginSignupForm = () => {
@@ -103,7 +104,9 @@ const LoginSignupForm = () => {
       const user = response.data.username; // User data
       const is_admin = response.data.is_admin; // Whether the user is an admin or not
 
-     
+      const indexData = {  username: user, is_admin: is_admin }
+
+      await saveUserData(indexData);
       console.log('Token:', token); // Token for authenticated requests
       dispatch(setCredentials({ token, user, isAdmin: is_admin })); // Store user credentials in Redux store
       setError('');
