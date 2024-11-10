@@ -18,13 +18,21 @@ def create_resource():
     print("Received data:", data)  # Print received data
 
     new_resource = Resource(
-        name=data['name'],
-        location=data['location'],
-        type=data['type'],
+        name=data.get('name'),
+        location=data.get('location'),
+        type=data.get('type'),
         accessibility=data.get('accessibility'),
-        zip_code=data['zip_code'],
-        latitude=data['latitude'],
-        longitude=data['longitude']
+        comments=data.get('comments'),
+        description=data.get('description'),
+        votes_accuracy=data.get('votes_accuracy'),
+        votes_verified=data.get('votes_verified'),
+        latitude=data.get('latitude'),
+        longitude=data.get('longitude'),
+        street_address=data.get('street_address'),
+        city=data.get('city'),
+        state=data.get('state'),
+        zip_code=data.get('zip_code'),
+        phone_number=data.get('phone_number')
     )
     db.session.add(new_resource)
     db.session.commit()

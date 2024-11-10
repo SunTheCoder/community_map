@@ -167,7 +167,7 @@ const Header = () => {
             </VStack>
             <AddResourceModal isOpen={isModalOpen} onClose={closeModal} onSave={handleSave} />
             <Box justifySelf="center">
-              <Text fontSize={22} fontWeight="bold">Resource List:</Text>
+              <Text fontSize={22} fontWeight="bold" textAlign='center' m={5}>Resource List:</Text>
               <ResourceList resources={resources} />
             </Box>
           </TabPanel>
