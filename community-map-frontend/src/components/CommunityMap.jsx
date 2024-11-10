@@ -116,8 +116,8 @@ const CommunityMap = ({ resources, mapCenter, zoomLevel }) => {
       </div>
 
       {/* Map Container */}
-      <div id="map-container" style={{ width: '400px', height: '400px' , justifySelf: 'center'}}>
-        <MapContainer center={mapCenter} zoom={zoomLevel} style={{ height: '400px', width: '100%' }}>
+      <div id="map-container" style={{ width: '1100px', height: '800px' , justifySelf: 'center'}}>
+        <MapContainer center={mapCenter} zoom={zoomLevel} style={{ height: '800px', width: '1100px' }}>
           <MapViewUpdater center={mapCenter} zoom={zoomLevel} />
 
           <TileLayer
