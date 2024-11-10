@@ -82,6 +82,14 @@ def delete_resource(resource_id):
     return jsonify({"message": "Resource deleted"}), 204
 
 
+@resource_bp.route('/resources', methods=['DELETE'])
+def delete_all_resource():
+
+    db.session.query(Resource).delete()
+    db.session.commit()
+    return jsonify({"message": "All resourcess deleted"}), 200
+    
+
 @user_bp.route('/register', methods=['POST'])
 def register():
     data = request.json

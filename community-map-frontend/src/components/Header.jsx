@@ -17,6 +17,7 @@ import AdminPanel from "./AdminPanel";
 const Header = () => {
   const { colorMode, toggleColorMode } = useColorMode();
   const dispatch = useDispatch();
+  
 
   const toast = useToast();
 
@@ -26,6 +27,8 @@ const Header = () => {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeTabIndex, setActiveTabIndex] = useState(0); // Track active tab index
+  const [refresh, setRefresh] = useState(false); // New state to trigger ResourceList refresh
+
 
   // Derived state to determine if map tab is active
   const isMapTabActive = activeTabIndex === 2; // Assuming the map tab is the third tab
@@ -80,6 +83,8 @@ const Header = () => {
 
         // Save to IndexedDB with `isSynced: true` as it has been saved to the backend
         await saveResource(response.data, true);
+
+        setRefresh(prev => !prev); 
 
         resolve(response.data); // Resolve the promise on success
       } catch (error) {
@@ -168,7 +173,7 @@ const Header = () => {
             <AddResourceModal isOpen={isModalOpen} onClose={closeModal} onSave={handleSave} />
             <Box justifySelf="center">
               <Text fontSize={22} fontWeight="bold" textAlign='center' m={5}>Resource List:</Text>
-              <ResourceList resources={resources} />
+              <ResourceList resources={resources} refresh={refresh}/>
             </Box>
           </TabPanel>
         </TabPanels>
