@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import api from '../api/api';  // Import the custom Axios instance
-import { Card, CardHeader, CardBody, CardFooter, Divider, Grid, GridItem, Text } from '@chakra-ui/react'
-// import './ResourceList.css';  // Import the CSS file for styling
+import { Card, CardHeader, CardBody, CardFooter, Divider, Grid, GridItem, Text, Button, useToast } from '@chakra-ui/react';
 
 const ResourceList = () => {
     const [resources, setResources] = useState([]);
+    const toast = useToast();
 
     useEffect(() => {
         // Fetch resources from the API when the component mounts
@@ -13,39 +13,60 @@ const ResourceList = () => {
            .catch(error => console.error(error));
     }, []);
 
-  
+    const handleCopy = async (latitude, longitude) => {
+        const formattedCoordinates = `${latitude}, ${longitude}`;
+        
+        try {
+            await navigator.clipboard.writeText(formattedCoordinates);
+            toast({
+                title: "Copied to clipboard!",
+                description: `${formattedCoordinates} has been copied.`,
+                status: "success",
+                duration: 2000,
+                isClosable: true,
+            });
+        } catch (error) {
+            toast({
+                title: "Failed to copy",
+                description: "Could not copy the coordinates to clipboard.",
+                status: "error",
+                duration: 2000,
+                isClosable: true,
+            });
+        }
+    };
 
-    console.log('Resources:', resources);
     return (
         <div>
-            <Grid templateColumns="repeat(4, 1fr)" gap={6} p={4}>
-            {/* <h2>Resource List</h2> */}
-            {resources.reverse().map(resource => (
-                console.log('Resource:', resource),  // Log the resource for debugging purposes
-                // <div key={resource.id}>
-                //     <h3>{resource.name}</h3>
-                //     <h4>{resource.type}</h4>
-                //     <p>{resource.zip_code}</p>
-                //     Community Verified: {resource.community_verified ? 'Yes' : 'No'}
-                // </div>
-                <GridItem>
-                <Card key={resource.id} m={5}>
-                    <CardHeader fontSize={20} fontWeight='bold' >{resource.name}</CardHeader>
-                    <CardBody>
-                        <Text>Offering: {resource.type}</Text>
-                        <Divider/>
-                        <Text>Street Address: {resource.street_address}</Text>
-                        <Text>City: {resource.city}</Text>
-                        <Text>State: {resource.state}</Text>
-                        <Text>Zip Code: {resource.zip_code}</Text>
-                        <Divider/>
-                        <Text>Community Verified: {resource.community_verified ? 'Yes' : 'No'}</Text>
-                        <Divider/>
-                    </CardBody>
-                    <CardFooter>Phone Number: {resource.phone_number}</CardFooter>  
-                </Card>
-                </GridItem>
-            ))}
+            <Grid templateColumns="repeat(5, 1fr)" gap={4} p={4}>
+                {resources.reverse().map(resource => (
+                    <GridItem key={resource.id}>
+                        <Card m={5}>
+                            <CardHeader fontSize={20} fontWeight='bold'>{resource.name}</CardHeader>
+                            <CardBody>
+                                <Text>Offering: {resource.type}</Text>
+                                <Divider/>
+                                <Text>City: {resource.city}</Text>
+                                <Text>Zip Code: {resource.zip_code}</Text>
+                                <Divider/>
+                                <Text>Community Verified: {resource.community_verified ? 'Yes' : 'No'}</Text>
+                                <Divider/>
+                                <Button variant='link' size='sm'>View Details</Button>
+                            </CardBody>
+                            <CardFooter>
+                                <Text 
+                                    fontSize={12} 
+                                    cursor="pointer" 
+                                    onClick={() => handleCopy(resource.latitude, resource.longitude)}
+                                >
+                                    {resource.latitude}
+                                    {resource.longitude}
+                                </Text>
+                                
+                            </CardFooter>
+                        </Card>
+                    </GridItem>
+                ))}
             </Grid>
         </div>
     );
