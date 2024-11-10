@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import { logout } from '../features/authSlice';
 import { fetchResources, addResource } from '../features/resourceSlice';
+import { syncUnsyncedResources } from "../indexedDB";
 
 import { Tabs, TabList, Tab, TabPanels, TabPanel, useColorMode, Button, VStack, Text, Box, Flex } from "@chakra-ui/react";
 import ResourceList from "./ResourceList";
@@ -35,24 +36,47 @@ const Header = () => {
   };
 
   useEffect(() => {
-    // Dispatch the action to fetch resources from the API
     dispatch(fetchResources());
+    window.addEventListener('beforeunload', syncUnsyncedResources); // Sync on refresh/unload
+    return () => {
+      window.removeEventListener('beforeunload', syncUnsyncedResources);
+    };
+    // Dispatch the action to fetch resources from the API
   }, [dispatch]);
+
+   // Update map center when resources change
+   useEffect(() => {
+    if (resources.length > 0) {
+      const firstResource = resources[0];
+      setMapCenter([parseFloat(firstResource.latitude), parseFloat(firstResource.longitude)]);
+    }
+  }, [resources]);
 
   const handleSave = async (resourceData) => {
     try {
+      // Save to the backend
       const response = await api.post('/resources', resourceData);
       console.log("Resource saved successfully:", response.data);
-      
-      // Dispatch the addResource action to update Redux store with the new resource
+  
+      // Dispatch to Redux
       dispatch(addResource(response.data));
+  
+      // Save to IndexedDB with `isSynced: true` as it has been saved to the backend
+      await saveResource(response.data, true); 
+  
       closeModal();
     } catch (error) {
-      console.error("Error saving resource:", error);
+      console.error("Error saving resource to backend:", error);
+  
+      // If backend save fails, save to IndexedDB as `isSynced: false` to retry later
+      await saveResource(resourceData, false); 
     }
   };
+  
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    await syncUnsyncedResources(); // Sync unsynced data before logout
+
     dispatch(logout());
   };
 
