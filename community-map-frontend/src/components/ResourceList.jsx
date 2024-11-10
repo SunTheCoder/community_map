@@ -47,7 +47,7 @@ const ResourceList = ({ resources, refresh }) => {
             <Grid templateColumns="repeat(5, 1fr)" gap={4} p={4}>
                 {localResources.map(resource => (
                     <GridItem key={resource.id}>
-                        <Card m={5}>
+                        <Card m={5} w={270}>
                             <CardHeader fontSize={20} fontWeight='bold'>
                             <Heading size="md" fontWeight="bold">{resource.name}</Heading> 
 
@@ -79,7 +79,7 @@ const ResourceList = ({ resources, refresh }) => {
                                     cursor="pointer" 
                                     onClick={() => handleCopy(resource.latitude, resource.longitude)}
                                 >
-                                    Latitude: {resource.latitude}, Longitude: {resource.longitude}
+                                    Latitude: {resource.latitude} <br></br> Longitude: {resource.longitude}
                                 </Text>
                             </CardFooter>
                         </Card>
