@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import api from '../api/api';  // Import the custom Axios instance
-import { Card, CardHeader, CardBody, CardFooter, Divider, Grid, GridItem, Text, Button, useToast } from '@chakra-ui/react';
+import { Card, CardHeader, CardBody, CardFooter, Divider, Grid, GridItem, Text, Button, useToast, Heading } from '@chakra-ui/react';
 
 const ResourceList = ({ resources, refresh }) => {
     const [localResources, setLocalResources] = useState(resources); // Renamed to `localResources`
@@ -48,14 +48,17 @@ const ResourceList = ({ resources, refresh }) => {
                 {localResources.reverse().map(resource => (
                     <GridItem key={resource.id}>
                         <Card m={5}>
-                            <CardHeader fontSize={20} fontWeight='bold'>{resource.name}</CardHeader>
+                            <CardHeader fontSize={20} fontWeight='bold'>
+                            <Heading size="md" fontWeight="bold">{resource.name}</Heading> 
+
+                            </CardHeader>
                             <CardBody>
-                                <Text>Offering: {resource.type}</Text>
+                                <Text fontSize="lg" >Offering: {resource.type}</Text>
                                 <Divider/>
-                                <Text>City: {resource.city}</Text>
-                                <Text>Zip Code: {resource.zip_code}</Text>
+                                <Text fontSize="sm" >City: {resource.city}</Text>
+                                <Text fontSize="sm" >Zip Code: {resource.zip_code}</Text>
                                 <Divider/>
-                                <Text>Community Verified: {resource.community_verified ? 'Yes' : 'No'}</Text>
+                                <Text fontSize="sm" >Community Verified: {resource.community_verified ? 'Yes' : 'No'}</Text>
                                 <Divider/>
                                 <Button variant='link' size='sm'>View Details</Button>
                             </CardBody>
