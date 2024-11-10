@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import api from '../api/api';  // Import the custom Axios instance
-import { Card, CardHeader, CardBody, CardFooter, Divider, Grid, GridItem, Text, Button, useToast, Heading } from '@chakra-ui/react';
+import { Card, CardHeader, CardBody, CardFooter, Divider, Grid, GridItem, Text, Button, useToast, Heading, Flex } from '@chakra-ui/react';
 
 const ResourceList = ({ resources, refresh }) => {
     const [localResources, setLocalResources] = useState(resources); // Renamed to `localResources`
@@ -45,7 +45,7 @@ const ResourceList = ({ resources, refresh }) => {
     return (
         <div>
             <Grid templateColumns="repeat(5, 1fr)" gap={4} p={4}>
-                {localResources.reverse().map(resource => (
+                {localResources.map(resource => (
                     <GridItem key={resource.id}>
                         <Card m={5}>
                             <CardHeader fontSize={20} fontWeight='bold'>
@@ -53,12 +53,23 @@ const ResourceList = ({ resources, refresh }) => {
 
                             </CardHeader>
                             <CardBody>
-                                <Text fontSize="lg" >Offering: {resource.type}</Text>
+                                <Text fontSize="lg" >Offering:</Text>
+                                <Text fontSize="lg" textAlign='right'>{resource.type}</Text>
                                 <Divider/>
-                                <Text fontSize="sm" >City: {resource.city}</Text>
-                                <Text fontSize="sm" >Zip Code: {resource.zip_code}</Text>
+                                <Flex justifyContent="space-between" fontSize="sm" >
+                                    <Text>City:</Text>
+                                    <Text>{resource.city}</Text>
+                                </Flex>
+                                
+                                <Flex justifyContent="space-between" fontSize="sm" >
+                                    <Text>ZIP Code:</Text>
+                                    <Text>{resource.zip_code}</Text>
+                                </Flex>
                                 <Divider/>
-                                <Text fontSize="sm" >Community Verified: {resource.community_verified ? 'Yes' : 'No'}</Text>
+                                <Flex justifyContent="space-between" fontSize="sm" >
+                                    <Text>Community Verified:</Text>
+                                    <Text>{resource.community_verified ? 'Yes' : 'No'}</Text>
+                                </Flex>
                                 <Divider/>
                                 <Button variant='link' size='sm'>View Details</Button>
                             </CardBody>
