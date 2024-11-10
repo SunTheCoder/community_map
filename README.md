@@ -17,15 +17,12 @@
 - Redux
 - Axios
 - Chakra UI
+- IndexedDB for offline access ✊🏾
 
 #### Libraries/APIs
 
 - Leaflet
 - OpenCage for geocoding
-
-#### In Development
-
-- IndexedDB for offline access ✊🏾
 
 ### Future Features
 
