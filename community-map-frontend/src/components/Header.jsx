@@ -2,10 +2,10 @@ import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import { logout } from '../features/authSlice';
 import { fetchResources, addResource } from '../features/resourceSlice';
-import { syncUnsyncedResources } from "../indexedDB";
+import { syncUnsyncedResources, saveResource } from "../indexedDB";
 
 
-import { Tabs, TabList, Tab, TabPanels, TabPanel, useColorMode, Button, VStack, Text, Box, Flex } from "@chakra-ui/react";
+import { Tabs, TabList, Tab, TabPanels, TabPanel, useColorMode, Button, VStack, Text, Box, Flex, useToast } from "@chakra-ui/react";
 import ResourceList from "./ResourceList";
 import api from '../api/api';
 import CommunityMap from "./CommunityMap";
@@ -17,6 +17,8 @@ import AdminPanel from "./AdminPanel";
 const Header = () => {
   const { colorMode, toggleColorMode } = useColorMode();
   const dispatch = useDispatch();
+
+  const toast = useToast();
 
   // Access resources from the Redux store
   const resources = useSelector((state) => state.resources.resourceList);
@@ -65,26 +67,46 @@ const Header = () => {
     }
   }, [isMapTabActive]);
 
-const handleSave = async (resourceData) => {
-  try {
-    // Save to the backend
-    const response = await api.post('/resources', resourceData);
-    console.log("Resource saved successfully:", response.data);
+  const handleSave = async (resourceData) => {
+    // Wrap the save operation in a promise
+    const savePromise = new Promise(async (resolve, reject) => {
+      try {
+        // Save to the backend
+        const response = await api.post('/resources', resourceData);
+        console.log("Resource saved successfully:", response.data);
 
-    // Dispatch to Redux
-    dispatch(addResource(response.data));
+        // Dispatch to Redux
+        dispatch(addResource(response.data));
 
-    // Save to IndexedDB with `isSynced: true` as it has been saved to the backend
-    await saveResource(response.data, true); 
+        // Save to IndexedDB with `isSynced: true` as it has been saved to the backend
+        await saveResource(response.data, true);
 
-    closeModal();
-  } catch (error) {
-    console.error("Error saving resource to backend:", error);
+        resolve(response.data); // Resolve the promise on success
+      } catch (error) {
+        console.error("Error saving resource to backend:", error);
 
-    // If backend save fails, save to IndexedDB as `isSynced: false` to retry later
-    await saveResource(resourceData, false); 
-  }
-};
+        // If backend save fails, save to IndexedDB as `isSynced: false` to retry later
+        await saveResource(resourceData, false);
+
+        reject(error); // Reject the promise on failure
+      }
+    });
+
+    // Display the loading toast until the promise resolves or rejects
+    toast.promise(savePromise, {
+      loading: { title: "Saving resource", description: "Please wait..." },
+      success: { title: "Resource saved", description: "Resource added successfully!" },
+      error: { title: "Save failed", description: "Could not save the resource." },
+    });
+
+    // Await the save promise, and close the modal only if it resolves
+    try {
+      await savePromise;
+      closeModal(); // Close the modal after successful save
+    } catch (error) {
+      // Optionally handle any additional error behavior here
+    }
+  };
 
 
   const handleLogout = async () => {

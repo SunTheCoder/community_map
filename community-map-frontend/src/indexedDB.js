@@ -10,11 +10,18 @@ const dbPromise = openDB('communityAppDB', 1, {
   },
 });
 
-export const saveResource = async (resource, isSynced = false) => {
-  const db = await dbPromise;
-  resource.isSynced = isSynced; // Add the isSynced flag
-  return db.put('resources', resource);
-};
+export const saveResource = async (resourceData, isSynced) => {
+    // Create a shallow copy of resourceData to make it extensible
+    const dataToSave = { ...resourceData, isSynced };
+  
+    try {
+      const db = await dbPromise;
+      await db.put("resources", dataToSave); // Save to IndexedDB
+    } catch (error) {
+      console.error("Error saving to IndexedDB:", error);
+    }
+  };
+  
 
 export const saveUserData = async (user) => {
     try {
