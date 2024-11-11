@@ -1,4 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.orm import foreign
+from sqlalchemy.ext.declarative import declared_attr
 import bcrypt
 
 db = SQLAlchemy()
@@ -9,7 +11,7 @@ class User(db.Model):
     username = db.Column(db.String(80), unique=True, nullable=False)
     password_hash = db.Column(db.String(128), nullable=False)
     zip_code = db.Column(db.String(10), nullable=False)
-    is_admin = db.Column(db.Boolean, default=False)  # New field for admin status
+    is_admin = db.Column(db.Boolean, default=False)
 
     def set_password(self, password):
         self.password_hash = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
@@ -47,7 +49,6 @@ class Resource(db.Model):
     zip_code = db.Column(db.String(10), nullable=False)
     phone_number = db.Column(db.String(20))
 
-    # Define a bidirectional relationship with Comment using back_populates
     comments = db.relationship('Comment', back_populates='resource', lazy=True)
 
     def serialize(self):
@@ -81,9 +82,16 @@ class Comment(db.Model):
     image_url = db.Column(db.String(255))  # Optional URL to an image associated with the comment
     created_at = db.Column(db.DateTime, server_default=db.func.now())
 
-    # Define bidirectional relationships with Resource and User using back_populates
     resource = db.relationship('Resource', back_populates='comments')
     user = db.relationship('User', backref=db.backref('comments', lazy=True))
+
+    replies = db.relationship(
+        'Reply',
+        primaryjoin="and_(foreign(Reply.record_id) == Comment.id, Reply.record_type == 'comment')",
+        backref="comment",
+        lazy=True,
+        overlaps="post,replies"
+    )
 
     def serialize(self):
         return {
@@ -112,8 +120,15 @@ class Post(db.Model):
     image_url = db.Column(db.String(255))  # Optional URL to an image associated with the post
     created_at = db.Column(db.DateTime, server_default=db.func.now())
 
-    # Relationship back to User
     user = db.relationship('User', backref=db.backref('posts', lazy=True))
+
+    replies = db.relationship(
+        'Reply',
+        primaryjoin="and_(foreign(Reply.record_id) == Post.id, Reply.record_type == 'post')",
+        backref="post",
+        lazy=True,
+        overlaps="comment,replies"
+    )
 
     def serialize(self):
         return {
@@ -124,3 +139,42 @@ class Post(db.Model):
             "image_url": self.image_url,
             "created_at": self.created_at
         }
+
+
+class Reply(db.Model):
+    __tablename__ = 'replies'
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    record_id = db.Column(db.Integer, nullable=False)  # ID of the post or comment being replied to
+    record_type = db.Column(db.String(50), nullable=False)  # Type: 'post' or 'comment'
+    content = db.Column(db.Text, nullable=False)
+    created_at = db.Column(db.DateTime, server_default=db.func.now())
+
+    @declared_attr
+    def __mapper_args__(cls):
+        return {
+            'polymorphic_on': cls.record_type,
+            'polymorphic_identity': 'reply'
+        }
+
+    user = db.relationship('User', backref=db.backref('replies', lazy=True))
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "user_id": self.user_id,
+            "record_id": self.record_id,
+            "record_type": self.record_type,
+            "content": self.content,
+            "created_at": self.created_at
+        }
+
+class PostReply(Reply):
+    __mapper_args__ = {
+        'polymorphic_identity': 'post'
+    }
+
+class CommentReply(Reply):
+    __mapper_args__ = {
+        'polymorphic_identity': 'comment'
+    }

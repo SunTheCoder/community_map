@@ -27,13 +27,16 @@ def create_app():
     # Initialize extensions
     db.init_app(app)
     migrate.init_app(app, db)
-    CORS(app)
+    CORS(app, resources={r"/api/*": {"origins": "http://localhost:5173", "methods": ["GET", "POST", "OPTIONS", "PUT", "DELETE"]}})
+
 
     # Register Blueprints
-    from .routes import resource_bp, user_bp, auth_bp, post_bp
+    from .routes import resource_bp, user_bp, auth_bp, post_bp, reply_bp  # Import the blueprints
     app.register_blueprint(resource_bp, url_prefix='/api')
     app.register_blueprint(user_bp, url_prefix='/api')
     app.register_blueprint(auth_bp, url_prefix='/api')
     app.register_blueprint(post_bp, url_prefix='/api') 
+    app.register_blueprint(reply_bp, url_prefix='/api')  # Register the reply routes
+
 
     return app
