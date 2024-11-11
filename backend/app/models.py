@@ -160,9 +160,12 @@ class Reply(db.Model):
     user = db.relationship('User', backref=db.backref('replies', lazy=True))
 
     def serialize(self):
+        user = User.query.get(self.user_id)
+
         return {
             "id": self.id,
             "user_id": self.user_id,
+            "username": user.username if user else "Unknown",
             "record_id": self.record_id,
             "record_type": self.record_type,
             "content": self.content,

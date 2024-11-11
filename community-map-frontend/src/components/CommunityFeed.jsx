@@ -83,7 +83,8 @@ const CommunityFeed = ({ posts, loading }) => {
                     bg="gray.50"
                   >
                     <Text fontSize="sm" fontWeight="bold">
-                      Reply:
+                      Reply from {reply.username}:
+
                     </Text>
                     <Text fontSize="sm" color="gray.600">
                       {reply.content}
