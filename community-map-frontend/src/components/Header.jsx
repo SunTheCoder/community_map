@@ -41,7 +41,7 @@ const Header = () => {
 
 
   // Derived state to determine if map tab is active
-  const isMapTabActive = activeTabIndex === 2; // Assuming the map tab is the third tab
+  const isMapTabActive = activeTabIndex === 1; // Assuming the map tab is the third tab
 
   // Shared state for map center and zoom level
   const [mapCenter, setMapCenter] = useState([51.505, -0.09]); // Initialize with a default value
@@ -196,7 +196,7 @@ const Header = () => {
       <Tabs index={activeTabIndex} onChange={(index) => setActiveTabIndex(index)} variant="line" colorScheme="teal" p={4}>
         <TabList justifyContent="center" maxWidth="500px" mx="auto">
           <Tab width="130px" textAlign="center" flexShrink={0}>Home</Tab>
-          <Tab width="130px" textAlign="center" flexShrink={0}>About</Tab>
+          {/* <Tab width="130px" textAlign="center" flexShrink={0}>About</Tab> */}
           <Tab width="130px" textAlign="center" flexShrink={0}>Map</Tab>
           <Tab width="130px" textAlign="center" flexShrink={0}>Resources</Tab>
         </TabList>
@@ -215,7 +215,7 @@ const Header = () => {
               <LoginSignupForm />
             )}
           </TabPanel>
-          <TabPanel>
+          {/* <TabPanel>
             <VStack>
               <Text textAlign="center" w={400} fontSize={20} m={5}>
                 "Empowering Communities, Honoring Legacy"
@@ -224,7 +224,7 @@ const Header = () => {
                 This map platform is designed to put the power of local knowledge and resources into the hands of the community...
               </Text>
             </VStack>
-          </TabPanel>
+          </TabPanel> */}
           <TabPanel>
             <div key={isMapTabActive ? 'map-active' : 'map-inactive'}>
               <CommunityMap resources={resources} mapCenter={mapCenter} zoomLevel={zoomLevel} />
@@ -260,6 +260,14 @@ const Header = () => {
           </ModalBody>
         </ModalContent>
       </Modal>
+      <VStack marginBottom={20}>
+          <Text textAlign="center" w={400} fontSize={20} >
+            "Empowering Communities, Honoring Legacy"
+          </Text>
+          <Text textAlign="center" w={400}>
+            This map platform is designed to put the power of local knowledge and resources into the hands of the community...
+          </Text>
+      </VStack>
   </>
   
   );
