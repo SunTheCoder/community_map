@@ -22,6 +22,8 @@ const Header = () => {
   const dispatch = useDispatch();
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true); // Loading state for posts
+  const [isCreatePostModalOpen, setIsCreatePostModalOpen] = useState(false); // State to control CreatePost modal
+
 
   
 
@@ -202,9 +204,11 @@ const Header = () => {
           <TabPanel>
             {token ? (
                <VStack spacing={8}>
-               <CreatePost onPostCreated={handleNewPost} />
+               <Button colorScheme="teal" onClick={() => setIsCreatePostModalOpen(true)}>
+                 Create New Post
+               </Button>
                <Divider />
-               <CommunityFeed posts={posts} />
+               <CommunityFeed posts={posts} loading={loading} />
              </VStack>
             
             ) : (
@@ -242,6 +246,20 @@ const Header = () => {
       <Flex direction="row" align="center" gap={20} p={15} my={8} />
     </VStack>
     {/* <CommunityMap resources={resources} mapCenter={mapCenter} zoomLevel={zoomLevel} /> */}
+    {/* CreatePost Modal */}
+    <Modal isOpen={isCreatePostModalOpen} onClose={() => setIsCreatePostModalOpen(false)}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Create a New Post</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <CreatePost onPostCreated={(post) => {
+              handleNewPost(post);
+              setIsCreatePostModalOpen(false); // Close modal after post creation
+            }} />
+          </ModalBody>
+        </ModalContent>
+      </Modal>
   </>
   
   );
