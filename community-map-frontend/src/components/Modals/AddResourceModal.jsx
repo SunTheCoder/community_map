@@ -1,7 +1,7 @@
 
 
 import React, { useState, useCallback } from 'react';
-import { Box, Flex, Button, Input, FormControl, FormLabel, useColorModeValue, CloseButton } from "@chakra-ui/react";
+import { Box, Flex, Button, Input, FormControl, FormLabel, useColorModeValue, CloseButton, FormHelperText, Select } from "@chakra-ui/react";
 // import { CloseButton } from "@/components/ui/close-button"
 
 import axios from 'axios';
@@ -144,6 +144,7 @@ const AddResourceModal = ({ isOpen, onClose, onSave }) => {
           <FormControl isRequired>
             <FormLabel>Type</FormLabel>
             <Input type="text" name="type" placeholder="Type" onChange={handleChange} />
+            <FormHelperText fontSize={11}>Community Fridge, Herbs, Massage</FormHelperText>
           </FormControl>
           <FormControl isRequired>
             <FormLabel>Accessibility</FormLabel>
@@ -163,6 +164,7 @@ const AddResourceModal = ({ isOpen, onClose, onSave }) => {
                 placeholder="e.g., 37.7749" 
                 onChange={handleChange} 
             />
+            <FormHelperText fontSize={11}>Latitude will auto-fill by entering address</FormHelperText>
           </FormControl>
           <FormControl>
             <FormLabel>Longitude</FormLabel>
@@ -173,6 +175,8 @@ const AddResourceModal = ({ isOpen, onClose, onSave }) => {
                 placeholder="e.g., 37.7749" 
                 onChange={handleChange} 
             />
+            <FormHelperText fontSize={11}>Longitude will auto-fill by entering address</FormHelperText>
+
           </FormControl>
           <FormControl>
             <FormLabel>City</FormLabel>
