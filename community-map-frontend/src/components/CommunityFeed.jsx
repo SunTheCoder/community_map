@@ -1,70 +1,78 @@
-// import { VStack, Box, Text, Image, Button } from '@chakra-ui/react';
+import React, { useEffect, useState } from "react";
+import { Box, VStack, Text, Image, Spinner, Center } from "@chakra-ui/react";
+import api from "../api/api";
+import CreatePost from "./CreatePost";
 
-// const NewsFeed = ({ posts }) => {
-//   return (
-//     <VStack spacing={4} align="stretch">
-//       {posts.map((post) => (
-//         <Box key={post.id} p={5} shadow="md" borderWidth="1px" borderRadius="lg">
-//           <Image borderRadius="md" src={post.image} alt={post.title} />
-//           <Text fontSize="xl" fontWeight="bold" mt={2}>{post.title}</Text>
-//           <Text mt={2} noOfLines={2}>{post.excerpt}</Text>
-//           <Button mt={4} variant="link" colorScheme="teal">
-//             Read more
-//           </Button>
-//         </Box>
-//       ))}
-//     </VStack>
-//   );
-// };
+const CommunityFeed = ({ posts, loading }) => {
+//   const [posts, setPosts] = useState([]);
+//   const [loading, setLoading] = useState(true);
+//   const [refresh, setRefresh] = useState(false); // State to trigger refresh
 
-// export default NewsFeed;
+//   const fetchPosts = async () => {
+//     setLoading(true); // Reset loading state for a better user experience
+//     try {
+//       const response = await api.get("/posts");
+//       setPosts(response.data);
+//     } catch (error) {
+//       console.error("Error fetching posts:", error);
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
 
-// or
+//   // Refetch posts whenever refresh state changes
+//   useEffect(() => {
+//     fetchPosts();
+//   }, [refresh]);
 
-import { Box, Text, Image, Button, VStack, useBreakpointValue } from '@chakra-ui/react';
+//   // Callback to handle post creation
+//   const handlePostCreated = () => {
+//     setRefresh((prev) => !prev); // Toggle refresh state to trigger re-fetch
+//   };
 
-const NewsFeed = ({ posts }) => {
   return (
-    <VStack spacing={4} align="stretch">
-      {posts.map((post) => (
-        <Box
-          key={post.id}
-          maxW="sm"
-          borderWidth="1px"
-          borderRadius="lg"
-          overflow="hidden"
-          boxShadow="lg"
-          _hover={{ boxShadow: 'xl', transform: 'scale(1.02)', transition: 'transform 0.2s' }}
-          p={5}
-        >
-          {/* Optional: Image */}
-          {post.image && (
-            <Image
+    <Box w="100%" p={4}>
+      <Text fontSize="2xl" fontWeight="bold" mb={4} textAlign="center">
+        Community Feed
+      </Text>
+      {/* CreatePost component with callback */}
+      {/* <CreatePost onPostCreated={handlePostCreated} /> */}
+      {loading ? (
+        <Center>
+          <Spinner size="lg" />
+        </Center>
+      ) : (
+        <VStack spacing={4} align="stretch">
+          {posts.map((post) => (
+            <Box
+              key={post.id}
+              p={4}
+              boxShadow="md"
               borderRadius="md"
-              src={post.image}
-              alt={post.title}
-              objectFit="cover"
-              boxSize="200px"
-              mb={4}
-            />
-          )}
-
-          {/* Title */}
-          <Text fontSize="2xl" fontWeight="semibold" noOfLines={1}>
-            {post.title}
-          </Text>
-
-          {/* Excerpt */}
-          <Text mt={2} noOfLines={3}>
-            {post.excerpt}
-          </Text>
-
-          {/* Read More Button */}
-          <Button mt={4} variant="solid" colorScheme="teal" size="sm">
-            Read More
-          </Button>
-        </Box>
-      ))}
-    </VStack>
+              borderWidth="1px"
+            >
+              <Text fontSize="xl" fontWeight="bold">
+                {post.title}
+              </Text>
+              <Text fontSize="md" color="gray.600">
+                {post.content}
+              </Text>
+              {post.image_url && (
+                <Image
+                  src={post.image_url}
+                  alt={post.title}
+                  borderRadius="md"
+                  mt={2}
+                  maxHeight="200px"
+                  objectFit="cover"
+                />
+              )}
+            </Box>
+          ))}
+        </VStack>
+      )}
+    </Box>
   );
 };
+
+export default CommunityFeed;

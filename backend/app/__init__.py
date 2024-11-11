@@ -30,9 +30,10 @@ def create_app():
     CORS(app)
 
     # Register Blueprints
-    from .routes import resource_bp, user_bp, auth_bp
+    from .routes import resource_bp, user_bp, auth_bp, post_bp
     app.register_blueprint(resource_bp, url_prefix='/api')
     app.register_blueprint(user_bp, url_prefix='/api')
     app.register_blueprint(auth_bp, url_prefix='/api')
+    app.register_blueprint(post_bp, url_prefix='/api') 
 
     return app

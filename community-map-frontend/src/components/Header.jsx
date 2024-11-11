@@ -3,9 +3,11 @@ import { useSelector, useDispatch } from 'react-redux';
 import { logout } from '../features/authSlice';
 import { fetchResources, addResource } from '../features/resourceSlice';
 import { syncUnsyncedResources, saveResource } from "../indexedDB";
+import CommunityFeed from "./CommunityFeed";
+import CreatePost from "./CreatePost";
 
 
-import { Switch, Tabs, TabList, Tab, TabPanels, TabPanel, useColorMode, Button, VStack, Text, Box, Flex, useToast, Avatar, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody } from "@chakra-ui/react";
+import { Switch, Tabs, TabList, Tab, TabPanels, TabPanel, useColorMode, Button, VStack, Text, Box, Flex, useToast, Avatar, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, Divider } from "@chakra-ui/react";
 import ResourceList from "./ResourceList";
 import api from '../api/api';
 import CommunityMap from "./CommunityMap";
@@ -18,6 +20,9 @@ import AdminPanel from "./AdminPanel";
 const Header = () => {
   const { colorMode, toggleColorMode } = useColorMode();
   const dispatch = useDispatch();
+  const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(true); // Loading state for posts
+
   
 
   const toast = useToast();
@@ -50,6 +55,27 @@ const Header = () => {
     setMapCenter([lat, lng]);
     setZoomLevel(zoom);
   };
+
+  const fetchPosts = async () => {
+    setLoading(true);
+    try {
+      const response = await api.get("/posts");
+      setPosts(response.data);
+    } catch (error) {
+      console.error("Error fetching posts:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchPosts(); // Fetch posts on initial mount
+    dispatch(fetchResources());
+    window.addEventListener('beforeunload', syncUnsyncedResources);
+    return () => {
+      window.removeEventListener('beforeunload', syncUnsyncedResources);
+    };
+  }, [dispatch]);
 
   useEffect(() => {
     dispatch(fetchResources());
@@ -119,6 +145,9 @@ const Header = () => {
     }
   };
 
+  const handleNewPost = (newPost) => {
+    setPosts((prevPosts) => [newPost, ...prevPosts]);
+  };
 
   const handleLogout = async () => {
     await syncUnsyncedResources(); // Sync unsynced data before logout
@@ -172,16 +201,12 @@ const Header = () => {
         <TabPanels>
           <TabPanel>
             {token ? (
-              <VStack spacing={4} align="center">
-                {/* <AdminPanel /> */}
-                {/* <Avatar size='sm' name={user}/> */}
-                <Text fontSize="lg" fontWeight="bold">
-                  Welcome, {user}!
-                </Text>
-                <Button colorScheme="teal" onClick={handleLogout}>
-                  Log Out
-                </Button>
-              </VStack>
+               <VStack spacing={8}>
+               <CreatePost onPostCreated={handleNewPost} />
+               <Divider />
+               <CommunityFeed posts={posts} />
+             </VStack>
+            
             ) : (
               <LoginSignupForm />
             )}
