@@ -5,7 +5,7 @@ import { fetchResources, addResource } from '../features/resourceSlice';
 import { syncUnsyncedResources, saveResource } from "../indexedDB";
 
 
-import { Tabs, TabList, Tab, TabPanels, TabPanel, useColorMode, Button, VStack, Text, Box, Flex, useToast } from "@chakra-ui/react";
+import { Switch, Tabs, TabList, Tab, TabPanels, TabPanel, useColorMode, Button, VStack, Text, Box, Flex, useToast, Avatar, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody } from "@chakra-ui/react";
 import ResourceList from "./ResourceList";
 import api from '../api/api';
 import CommunityMap from "./CommunityMap";
@@ -26,6 +26,8 @@ const Header = () => {
   const { token, user } = useSelector((state) => state.auth);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false); // New state for login modal
+
   const [activeTabIndex, setActiveTabIndex] = useState(0); // Track active tab index
   const [refresh, setRefresh] = useState(false); // New state to trigger ResourceList refresh
 
@@ -39,6 +41,9 @@ const Header = () => {
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
+
+  const openLoginModal = () => setIsLoginModalOpen(true); // Open login modal
+  const closeLoginModal = () => setIsLoginModalOpen(false); // Close login modal
 
   const updateMapCenter = (lat, lng, zoom = 15) => {
     setMapCenter([lat, lng]);
@@ -122,9 +127,36 @@ const Header = () => {
 
   return (
     <>
-    <Button w={20} h={6} colorScheme="teal" fontSize={10} onClick={toggleColorMode}>
-      {colorMode === 'light' ? 'Dark' : 'Light'} Theme
-    </Button>
+    
+    <Flex justifyContent="space-evenly" alignItems="center" p={4} gap='800' w="100%">
+    {/* Left side: Avatar or Login/Signup button */}
+    <Box>
+      {token && (
+        <Avatar size='sm' name={user} />
+
+        
+        
+      )}
+    </Box>
+
+   
+    {/* Right side: Theme toggle switch */}
+    <Flex alignItems="center" gap={2}>
+        <Text fontSize="sm">{colorMode === 'light' ? 'Light' : 'Dark'} Mode</Text>
+        <Switch isChecked={colorMode === 'dark'} onChange={toggleColorMode} />
+      </Flex>
+</Flex>
+        {/* Modal for Login/Signup */}
+        <Modal isOpen={isLoginModalOpen} onClose={closeLoginModal}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Login or Sign Up</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <LoginSignupForm />
+          </ModalBody>
+        </ModalContent>
+      </Modal>
     <VStack spacing={4} align="center">
       <h1 style={{ fontSize: '40px' }}>Community Map</h1>
       <Tabs index={activeTabIndex} onChange={(index) => setActiveTabIndex(index)} variant="line" colorScheme="teal" p={4}>
@@ -138,7 +170,8 @@ const Header = () => {
           <TabPanel>
             {token ? (
               <VStack spacing={4} align="center">
-                <AdminPanel />
+                {/* <AdminPanel /> */}
+                {/* <Avatar size='sm' name={user}/> */}
                 <Text fontSize="lg" fontWeight="bold">
                   Welcome, {user}!
                 </Text>
