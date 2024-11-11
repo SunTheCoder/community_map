@@ -11,7 +11,6 @@ class User(db.Model):
     zip_code = db.Column(db.String(10), nullable=False)
     is_admin = db.Column(db.Boolean, default=False)  # New field for admin status
 
-
     def set_password(self, password):
         self.password_hash = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
     
@@ -26,7 +25,6 @@ class User(db.Model):
             "zip_code": self.zip_code,
             "is_admin": self.is_admin 
         }
-            
 
 
 class Resource(db.Model):
@@ -36,19 +34,21 @@ class Resource(db.Model):
     location = db.Column(db.String(200), nullable=False)
     type = db.Column(db.String(50), nullable=False)
     accessibility = db.Column(db.String(100))
-    comments = db.Column(db.Text)
     accuracy = db.Column(db.Boolean, default=False)
     community_verified = db.Column(db.Boolean, default=False)
     description = db.Column(db.Text)
     votes_accuracy = db.Column(db.Integer, default=0)
     votes_verified = db.Column(db.Integer, default=0)
-    latitude = db.Column(db.Float, nullable=False)  # Separate latitude field
-    longitude = db.Column(db.Float, nullable=False)  # Separate longitude field
+    latitude = db.Column(db.Float, nullable=False)
+    longitude = db.Column(db.Float, nullable=False)
     street_address = db.Column(db.String(200))
     city = db.Column(db.String(100))
     state = db.Column(db.String(100))
     zip_code = db.Column(db.String(10), nullable=False)
     phone_number = db.Column(db.String(20))
+
+    # Define a bidirectional relationship with Comment using back_populates
+    comments = db.relationship('Comment', back_populates='resource', lazy=True)
 
     def serialize(self):
         return {
@@ -57,7 +57,6 @@ class Resource(db.Model):
             "location": self.location,
             "type": self.type,
             "accessibility": self.accessibility,
-            "comments": self.comments,
             "accuracy": self.accuracy,
             "community_verified": self.community_verified,
             "description": self.description,
@@ -73,6 +72,29 @@ class Resource(db.Model):
         }
 
 
+class Comment(db.Model):
+    __tablename__ = 'comments'
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    resource_id = db.Column(db.Integer, db.ForeignKey('resources.id'), nullable=False)
+    comment_text = db.Column(db.Text, nullable=False)
+    image_url = db.Column(db.String(255))  # Optional URL to an image associated with the comment
+    created_at = db.Column(db.DateTime, server_default=db.func.now())
+
+    # Define bidirectional relationships with Resource and User using back_populates
+    resource = db.relationship('Resource', back_populates='comments')
+    user = db.relationship('User', backref=db.backref('comments', lazy=True))
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "user_id": self.user_id,
+            "resource_id": self.resource_id,
+            "comment_text": self.comment_text,
+            "image_url": self.image_url,
+            "created_at": self.created_at
+        }
+
 class Notification(db.Model):
     __tablename__ = 'notifications'
     id = db.Column(db.Integer, primary_key=True)
@@ -81,3 +103,24 @@ class Notification(db.Model):
     proximity = db.Column(db.Integer)
 
 
+class Post(db.Model):
+    __tablename__ = 'posts'
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    title = db.Column(db.String(100), nullable=False)
+    content = db.Column(db.Text, nullable=False)
+    image_url = db.Column(db.String(255))  # Optional URL to an image associated with the post
+    created_at = db.Column(db.DateTime, server_default=db.func.now())
+
+    # Relationship back to User
+    user = db.relationship('User', backref=db.backref('posts', lazy=True))
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "user_id": self.user_id,
+            "title": self.title,
+            "content": self.content,
+            "image_url": self.image_url,
+            "created_at": self.created_at
+        }
