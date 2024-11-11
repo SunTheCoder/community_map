@@ -128,7 +128,8 @@ const LoginSignupForm = () => {
               type="text"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              placeholder="Username"
+              placeholder="CommUnityMama"
+              _placeholder={{ fontStyle: "italic"}}
             />
           </FormControl>
           <FormControl isRequired>
@@ -137,7 +138,8 @@ const LoginSignupForm = () => {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="Password"
+              placeholder="Nolove4fascists"
+              _placeholder={{ fontStyle: "italic"}}
             />
           </FormControl>
           <FormControl isRequired>
@@ -146,7 +148,8 @@ const LoginSignupForm = () => {
               type="zipcode"
               value={zipCode}
               onChange={(e) => setZipcode(e.target.value)}
-              placeholder="ZIP Code"
+              placeholder="21133"
+              _placeholder={{ fontStyle: "italic"}}
             />
           </FormControl>
           {error && <Text color="red.500">{error}</Text>}
