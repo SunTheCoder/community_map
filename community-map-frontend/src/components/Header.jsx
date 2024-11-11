@@ -12,6 +12,7 @@ import CommunityMap from "./CommunityMap";
 import AddResourceModal from "./Modals/AddResourceModal";
 import FindLocation from "./FindLocation";
 import LoginSignupForm from "./LoginSignupForm";
+import UserMenu from "./UserMenu";
 import AdminPanel from "./AdminPanel";
 
 const Header = () => {
@@ -132,7 +133,9 @@ const Header = () => {
     {/* Left side: Avatar or Login/Signup button */}
     <Box>
       {token && (
-        <Avatar size='sm' name={user} />
+        // <Avatar size='sm' name={user} />
+        <UserMenu user={user} onLogout={handleLogout} />
+
 
         
         

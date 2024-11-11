@@ -79,3 +79,5 @@ class Notification(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     category = db.Column(db.String(50))
     proximity = db.Column(db.Integer)
+
+
