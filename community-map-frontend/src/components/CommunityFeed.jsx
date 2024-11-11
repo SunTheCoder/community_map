@@ -33,7 +33,7 @@ const CommunityFeed = ({ posts, loading }) => {
   }, [posts]);
 
   return (
-    <Box w="100%" p={4}>
+    <Box w="800px" p={4}>
       <Text fontSize="2xl" fontWeight="bold" mb={4} textAlign="center">
         Community Feed
       </Text>
