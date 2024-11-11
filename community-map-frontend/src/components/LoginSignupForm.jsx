@@ -128,7 +128,7 @@ const LoginSignupForm = () => {
               type="text"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              placeholder="CommUnityMama"
+              placeholder="FannieLou"
               _placeholder={{ fontStyle: "italic"}}
             />
           </FormControl>
