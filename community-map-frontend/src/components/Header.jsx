@@ -237,15 +237,20 @@ const Header = () => {
             </div>
           </TabPanel>
           <TabPanel>
-            <VStack m={2}>
+            {/* <VStack m={2}>
               <FindLocation resources={resources} updateMapCenter={updateMapCenter} />
               <Button onClick={openModal}>Add Resource</Button>
             </VStack>
-            <AddResourceModal isOpen={isModalOpen} onClose={closeModal} onSave={handleSave} />
+            <AddResourceModal isOpen={isModalOpen} onClose={closeModal} onSave={handleSave} /> */}
             <Box justifySelf="center">
               <Text fontSize={22} fontWeight="bold" textAlign='center' m={5}>Resource List:</Text>
               <ResourceList resources={resources} refresh={refresh}/>
             </Box>
+            <VStack m={2}>
+              <Button onClick={openModal}>Add Resource</Button>
+              <FindLocation resources={resources} updateMapCenter={updateMapCenter} />
+            </VStack>
+            <AddResourceModal isOpen={isModalOpen} onClose={closeModal} onSave={handleSave} />
           </TabPanel>
         </TabPanels>
       </Tabs>
