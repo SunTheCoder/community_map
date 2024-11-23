@@ -6,6 +6,7 @@ import { syncUnsyncedResources, saveResource } from "../indexedDB";
 import CommunityFeed from "./CommunityFeed";
 import CreatePost from "./CreatePost";
 import Profile from "./Profile";
+// import ViewResourceModal from "./Modals/ViewResourceModal";
 
 
 import { Switch, Tabs, TabList, Tab, TabPanels, TabPanel, useColorMode, Button, VStack, Text, Box, Flex, useToast, Avatar, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, Divider } from "@chakra-ui/react";
@@ -163,6 +164,8 @@ const Header = () => {
     setIsProfileModalOpen(true);
   };
 
+ 
+
   return (
     <>
     
@@ -282,6 +285,8 @@ const Header = () => {
               </ModalBody>
             </ModalContent>
       </Modal>
+
+  
 
       <VStack marginBottom={20}>
           <Text textAlign="center" w={400} fontSize={20} >

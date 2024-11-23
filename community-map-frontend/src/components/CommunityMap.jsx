@@ -32,39 +32,6 @@ const validMapCenter = isValidLatLng(mapCenter[0], mapCenter[1]) ? mapCenter : [
 
   const OPEN_CAGE_API_KEY = import.meta.env.VITE_OPEN_CAGE_API_KEY; // Replace with your OpenCage API key
 
-//   useEffect(() => {
-//     if (resources.length > 0) {
-//       setMapCenter([parseFloat(resources[0].latitude), parseFloat(resources[0].longitude)]);
-//     }
-//   }, [resources]);
-
-  // const handleGeocode = async () => {
-  //   // Combine address components into a single string
-  //   const fullAddress = `${street}, ${city}, ${state} ${zipCode}`;
-    
-  //   try {
-  //     const response = await axios.get(`https://api.opencagedata.com/geocode/v1/json`, {
-  //       params: {
-  //         q: fullAddress,
-  //         key: OPEN_CAGE_API_KEY,
-  //       },
-  //     });
-      
-  //     if (response.data.results.length > 0) {
-  //       const { lat, lng } = response.data.results[0].geometry;
-  //       setMapCenter([lat, lng]); // Update the map center to the geocoded location
-  //       setLatitude(lat); // Set the latitude to display to the user
-  //       setLongitude(lng); // Set the longitude to display to the user
-  //       setZoomLevel(15); // Optional: zoom in on the location
-  //     } else {
-  //       alert('Address not found. Please try again.');
-  //     }
-  //   } catch (error) {
-  //     console.error("Geocoding error:", error);
-  //     alert('Error fetching location. Please try again.');
-  //   }
-  // };
-
   return (
     <div>
       
@@ -121,7 +88,7 @@ const validMapCenter = isValidLatLng(mapCenter[0], mapCenter[1]) ? mapCenter : [
 
       {/* Map Container */}
       <div id="map-container" style={{ width: '1100px', height: '800px' , justifySelf: 'center'}}>
-        <MapContainer center={mapCenter} zoom={zoomLevel} style={{ height: '800px', width: '1100px' }}>
+        <MapContainer center={mapCenter} zoom={zoomLevel} style={{ height: '800px', width: '1100px', borderRadius: '7.5px' }}>
           <MapViewUpdater center={validMapCenter} zoom={zoomLevel} />
 
           <TileLayer
