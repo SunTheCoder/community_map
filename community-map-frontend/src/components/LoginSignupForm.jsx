@@ -88,11 +88,21 @@ const LoginSignupForm = () => {
   const [password, setPassword] = useState('');
   const [zipCode, setZipcode] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+
   const dispatch = useDispatch();
 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
+    setLoading(true);
+
+    if (!isValidZipCode(zipCode)) {
+      setError("Please enter a valid ZIP code.");
+      setLoading(false);
+      return;
+    }
 
     try {
         console.log('Submitting form:', username, password, zipCode); // Debugging message
@@ -114,6 +124,8 @@ const LoginSignupForm = () => {
       setError(err.response?.data?.message || "An error occurred");
     }
   };
+
+  const isValidZipCode = (zip) => /^\d{5}(-\d{4})?$/.test(zip);
 
   return (
     <Box maxW="sm" mx="auto" p={6} boxShadow="lg" borderRadius="md">
