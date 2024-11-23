@@ -2,7 +2,7 @@ import { Avatar, Menu, MenuButton, MenuList, MenuItem, MenuDivider, Button, Text
 
 
 
-const UserMenu = ({ user, onLogout }) => {
+const UserMenu = ({ user, onLogout, openProfile }) => {
   return (
     <Menu>
       <MenuButton as={Button} variant="unstyled" cursor="pointer">
@@ -12,7 +12,7 @@ const UserMenu = ({ user, onLogout }) => {
       <Text fontSize="lg" fontWeight="bold" textAlign='center'>
                   Welcome, {user}!
                 </Text>
-        <MenuItem>Profile</MenuItem>
+        <MenuItem onClick={openProfile}>Profile</MenuItem>
         <MenuItem>Settings</MenuItem>
         <MenuDivider />
         <MenuItem onClick={onLogout}>Logout</MenuItem>

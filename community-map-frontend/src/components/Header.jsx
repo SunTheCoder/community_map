@@ -5,6 +5,7 @@ import { fetchResources, addResource } from '../features/resourceSlice';
 import { syncUnsyncedResources, saveResource } from "../indexedDB";
 import CommunityFeed from "./CommunityFeed";
 import CreatePost from "./CreatePost";
+import Profile from "./Profile";
 
 
 import { Switch, Tabs, TabList, Tab, TabPanels, TabPanel, useColorMode, Button, VStack, Text, Box, Flex, useToast, Avatar, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, Divider } from "@chakra-ui/react";
@@ -39,6 +40,7 @@ const Header = () => {
   const [activeTabIndex, setActiveTabIndex] = useState(0); // Track active tab index
   const [refresh, setRefresh] = useState(false); // New state to trigger ResourceList refresh
 
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
 
   // Derived state to determine if map tab is active
   const isMapTabActive = activeTabIndex === 1; // Assuming the map tab is the third tab
@@ -157,6 +159,10 @@ const Header = () => {
     dispatch(logout());
   };
 
+  const openProfile = () => {
+    setIsProfileModalOpen(true);
+  };
+
   return (
     <>
     
@@ -165,7 +171,7 @@ const Header = () => {
     <Box>
       {token && (
         // <Avatar size='sm' name={user} />
-        <UserMenu user={user} onLogout={handleLogout} />
+        <UserMenu user={user} onLogout={handleLogout} openProfile={openProfile}/>
 
 
         
@@ -250,7 +256,7 @@ const Header = () => {
     <Modal isOpen={isCreatePostModalOpen} onClose={() => setIsCreatePostModalOpen(false)}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Create a New Post</ModalHeader>
+          <ModalHeader fontSize={25}>Create a New Post</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <CreatePost onPostCreated={(post) => {
@@ -260,6 +266,18 @@ const Header = () => {
           </ModalBody>
         </ModalContent>
       </Modal>
+
+      <Modal isOpen={isProfileModalOpen} onClose={() => setIsProfileModalOpen(false)}>
+            <ModalOverlay />
+            <ModalContent>
+              <ModalHeader fontSize={25}>Profile</ModalHeader>
+              <ModalCloseButton />
+              <ModalBody>
+                <Profile user={user} />
+              </ModalBody>
+            </ModalContent>
+      </Modal>
+
       <VStack marginBottom={20}>
           <Text textAlign="center" w={400} fontSize={20} >
             "Empowering Communities, Honoring Legacy"

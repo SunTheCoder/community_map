@@ -44,7 +44,7 @@ const ResourceList = ({ resources, refresh }) => {
 
     return (
         <div>
-            <Grid templateColumns="repeat(5, 1fr)" gap={4} p={4}>
+            <Grid templateColumns="repeat(3, 1fr)" gap={4} p={4}>
                 {localResources.map(resource => (
                     <GridItem key={resource.id}>
                         <Card m={5} w={270}>
