@@ -115,19 +115,26 @@ const CommunityFeed = ({ posts, loading }) => {
                   </Text>
                 )}
                 <Flex gap={2}>
-                  <IconButton
-                    size="sm"
-                    icon={<FaEdit />}
-                    aria-label="Edit Post"
-                    onClick={() => handleEditPost(post)}
-                  />
-                  <IconButton
-                    size="sm"
-                    icon={<FaTrash />}
-                    aria-label="Delete Post"
-                    onClick={() => handleDeletePost(post.id)}
-                  />
-                </Flex>
+  <IconButton
+    size="sm"
+    icon={<FaEdit />}
+    aria-label="Edit Post"
+    onClick={() => handleEditPost(post)}
+    color="teal.500" // Adjust to your desired color
+    backgroundColor="transparent" // Ensures no button background
+    _hover={{ color: "teal.700" }} // Hover effect for better UX
+  />
+  <IconButton
+    size="sm"
+    icon={<FaTrash />}
+    aria-label="Delete Post"
+    onClick={() => handleDeletePost(post.id)}
+    color="red.500" // Adjust to your desired color
+    backgroundColor="transparent"
+    _hover={{ color: "red.700" }}
+  />
+</Flex>
+
               </Flex>
               <Text fontSize="md" color="gray.600">
                 {post.content}
@@ -162,19 +169,26 @@ const CommunityFeed = ({ posts, loading }) => {
                         {reply.username}:
                       </Text>
                       <Flex gap={2}>
-                        <IconButton
-                          size="xs"
-                          icon={<FaEdit />}
-                          aria-label="Edit Reply"
-                          onClick={() => console.log("Edit Reply not implemented")}
-                        />
-                        <IconButton
-                          size="xs"
-                          icon={<FaTrash />}
-                          aria-label="Delete Reply"
-                          onClick={() => handleDeleteReply(reply.id)}
-                        />
-                      </Flex>
+  <IconButton
+    size="xs"
+    icon={<FaEdit />}
+    aria-label="Edit Reply"
+    onClick={() => console.log("Edit Reply not implemented")}
+    color="teal.500"
+    backgroundColor="transparent"
+    _hover={{ color: "teal.700" }}
+  />
+  <IconButton
+    size="xs"
+    icon={<FaTrash />}
+    aria-label="Delete Reply"
+    onClick={() => handleDeleteReply(reply.id)}
+    color="red.500"
+    backgroundColor="transparent"
+    _hover={{ color: "red.700" }}
+  />
+</Flex>
+
                     </Flex>
                     <Text fontSize="sm" color="gray.600">
                       {reply.content}
