@@ -13,6 +13,9 @@ class User(db.Model):
     zip_code = db.Column(db.String(10), nullable=False)
     is_admin = db.Column(db.Boolean, default=False)
 
+    resources = db.relationship('Resource', back_populates='user', lazy=True)
+
+
     def set_password(self, password):
         self.password_hash = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
     
@@ -50,6 +53,10 @@ class Resource(db.Model):
     # Relationship to comments
     comments = db.relationship('Comment', back_populates='resource', lazy=True, cascade="all, delete-orphan")
 
+    # Add a user_id to establish ownership
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    user = db.relationship('User', back_populates='resources')  # Link to User model
+
     def serialize(self):
         return {
             "id": self.id,
@@ -67,6 +74,7 @@ class Resource(db.Model):
             "state": self.state,
             "zip_code": self.zip_code,
             "phone_number": self.phone_number,
+            "user_id": self.user_id,  # Include ownership info
             "comments": [comment.serialize() for comment in self.comments]  # Include comments in serialization
         }
 

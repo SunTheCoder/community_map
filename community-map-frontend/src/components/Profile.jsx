@@ -5,6 +5,8 @@ import api from '../api/api';
 
 const Profile = () => {
   const [userData, setUserData] = useState(null);
+  const [resources, setResources] = useState([]);
+  const [editingResource, setEditingResource] = useState(null); // Track the resource being edited
   const [posts, setPosts] = useState([]);
   const [replies, setReplies] = useState([]);
   const [editingPost, setEditingPost] = useState(null); // Tracks the post being edited
@@ -22,19 +24,27 @@ const Profile = () => {
         });
         const user = userResponse.data;
         setUserData(user);
-
+  
         const profileResponse = await api.get(`/users/${user.id}/profile`, {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         });
         setPosts(profileResponse.data.posts || []);
         setReplies(profileResponse.data.replies || []);
+  
+        // Fetch resources associated with the user
+        const resourcesResponse = await api.get(`/users/${user.id}/resources`, {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        });
+        setResources(resourcesResponse.data); // Now resourcesResponse is defined
       } catch (error) {
         console.error("Error fetching user profile:", error);
       } finally {
         setLoading(false);
       }
     };
+  
 
+  
     fetchUserProfile();
   }, []);
 
@@ -44,6 +54,44 @@ const Profile = () => {
 
   const handleEditReply = (reply) => {
     setEditingReply(reply); // Set the reply being edited
+  };
+
+  const handleEditResource = (resource) => {
+    setEditingResource(resource); // Set the resource being edited
+  };
+
+  const handleUpdateResource = async () => {
+    try {
+      const response = await api.put(`/resources/${editingResource.id}`, {
+        name: editingResource.name,
+        type: editingResource.type,
+        city: editingResource.city,
+        zip_code: editingResource.zip_code,
+      });
+      setResources((prev) =>
+        prev.map((resource) =>
+          resource.id === editingResource.id ? response.data : resource
+        )
+      );
+      toast({ title: "Resource updated successfully", status: "success" });
+      setEditingResource(null);
+    } catch (error) {
+      console.error("Error updating resource:", error);
+      toast({ title: "Failed to update resource", status: "error" });
+    }
+  };
+
+  const handleDeleteResource = async (resourceId) => {
+    try {
+      await api.delete(`/resources/${resourceId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setResources((prev) => prev.filter((resource) => resource.id !== resourceId));
+      toast({ title: "Resource deleted successfully", status: "success" });
+    } catch (error) {
+      console.error("Error deleting resource:", error);
+      toast({ title: "Failed to delete resource", status: "error" });
+    }
   };
 
   const handleUpdatePost = async () => {
@@ -223,6 +271,100 @@ const Profile = () => {
           </VStack>
         ) : (
           <Text>You haven't replied to anything yet.</Text>
+        )}
+      </Box>
+      <Box mb={8}>
+        <Heading as="h2" size="lg" mb={3}>
+          Your Resources
+        </Heading>
+        {resources.length > 0 ? (
+          <VStack spacing={4} align="stretch">
+            {resources.map((resource) =>
+              editingResource && editingResource.id === resource.id ? (
+                <Box key={resource.id} p={4} borderWidth={1} borderRadius="md">
+                  <Input
+                    value={editingResource.name}
+                    onChange={(e) =>
+                      setEditingResource({
+                        ...editingResource,
+                        name: e.target.value,
+                      })
+                    }
+                    mb={2}
+                  />
+                  <Input
+                    value={editingResource.type}
+                    onChange={(e) =>
+                      setEditingResource({
+                        ...editingResource,
+                        type: e.target.value,
+                      })
+                    }
+                    mb={2}
+                  />
+                  <Input
+                    value={editingResource.city}
+                    onChange={(e) =>
+                      setEditingResource({
+                        ...editingResource,
+                        city: e.target.value,
+                      })
+                    }
+                    mb={2}
+                  />
+                  <Input
+                    value={editingResource.zip_code}
+                    onChange={(e) =>
+                      setEditingResource({
+                        ...editingResource,
+                        zip_code: e.target.value,
+                      })
+                    }
+                    mb={2}
+                  />
+                  <Button
+                    mt={2}
+                    colorScheme="teal"
+                    onClick={handleUpdateResource}
+                  >
+                    Save
+                  </Button>
+                  <Button
+                    mt={2}
+                    ml={2}
+                    onClick={() => setEditingResource(null)}
+                  >
+                    Cancel
+                  </Button>
+                </Box>
+              ) : (
+                <Box key={resource.id} p={4} borderWidth={1} borderRadius="md">
+                  <Heading as="h3" size="md" mb={2}>
+                    {resource.name}
+                  </Heading>
+                  <Text>Type: {resource.type}</Text>
+                  <Text>City: {resource.city}</Text>
+                  <Text>ZIP Code: {resource.zip_code}</Text>
+                  <Button
+                    size="sm"
+                    onClick={() => handleEditResource(resource)}
+                  >
+                    Edit
+                  </Button>
+                  <Button
+                    size="sm"
+                    colorScheme="red"
+                    ml={2}
+                    onClick={() => handleDeleteResource(resource.id)}
+                  >
+                    Delete
+                  </Button>
+                </Box>
+              )
+            )}
+          </VStack>
+        ) : (
+          <Text>You haven't created any resources yet.</Text>
         )}
       </Box>
     </Box>
