@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 // import axios from "axios";
+import { Text, Box, List, ListItem, Spinner, Center, VStack, Heading } from "@chakra-ui/react";
 import { useSelector } from "react-redux";
 import api from '../api/api';
 
@@ -52,42 +53,54 @@ const Profile = () => {
   }
 
   return (
-    <div>
-      <h1>{userData.username}'s Profile</h1>
-      <p>Welcome to your profile page, {userData.username}!</p>
+    <Box maxWidth="800px" margin="auto" padding={4}>
+  <Heading as="h1" size="xl" mb={4}>{userData.username}'s Profile</Heading>
+  <Text fontSize="lg" mb={6}>Welcome to your profile page, {userData.username}!</Text>
 
-      <h2>Your Posts</h2>
-      {posts.length > 0 ? (
-        <ul>
-          {posts.map((post) => (
-            <li key={post.id}>
-              <h3>{post.title}</h3>
-              <p>{post.content}</p>
-              <small>Created At: {new Date(post.created_at).toLocaleString()}</small>
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p>You haven't created any posts yet.</p>
-      )}
+  <Box mb={8}>
+    <Heading as="h2" size="lg" mb={3}>Your Details</Heading>
+    <Text>ID: {userData.id}</Text>
+    <Text>Email: {userData.email || "Please Add Email"}</Text>
+  </Box>
 
-      <h2>Your Replies</h2>
-      {replies.length > 0 ? (
-        <ul>
-          {replies.map((reply) => (
-            <li key={reply.id}>
-              <p>{reply.content}</p>
-              <small>
-                Replied to a {reply.record_type} (ID: {reply.record_id}) on{" "}
-                {new Date(reply.created_at).toLocaleString()}
-              </small>
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p>You haven't replied to anything yet.</p>
-      )}
-    </div>
+  <Box mb={8}>
+    <Heading as="h2" size="lg" mb={3}>Your Posts</Heading>
+    {posts.length > 0 ? (
+      <VStack spacing={4} align="stretch">
+        {posts.map((post) => (
+          <Box key={post.id} p={4} borderWidth={1} borderRadius="md">
+            <Heading as="h3" size="md" mb={2}>{post.title}</Heading>
+            <Text mb={2}>{post.content}</Text>
+            <Text fontSize="sm" color="gray.500">
+              Created At: {new Date(post.created_at).toLocaleString()}
+            </Text>
+          </Box>
+        ))}
+      </VStack>
+    ) : (
+      <Text>You haven't created any posts yet.</Text>
+    )}
+  </Box>
+
+  <Box>
+    <Heading as="h2" size="lg" mb={3}>Your Replies</Heading>
+    {replies.length > 0 ? (
+      <VStack spacing={4} align="stretch">
+        {replies.map((reply) => (
+          <Box key={reply.id} p={4} borderWidth={1} borderRadius="md">
+            <Text mb={2}>{reply.content}</Text>
+            <Text fontSize="sm" color="gray.500">
+              Replied to a {reply.record_type} (ID: {reply.record_id}) on{" "}
+              {new Date(reply.created_at).toLocaleString()}
+            </Text>
+          </Box>
+        ))}
+      </VStack>
+    ) : (
+      <Text>You haven't replied to anything yet.</Text>
+    )}
+  </Box>
+</Box>
   );
 };
 
