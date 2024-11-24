@@ -11,17 +11,22 @@ const dbPromise = openDB('communityAppDB', 1, {
 });
 
 export const saveResource = async (resourceData, isSynced) => {
-    // Create a shallow copy of resourceData to make it extensible
-    const dataToSave = { ...resourceData, isSynced };
-  
-    try {
-      const db = await dbPromise;
-      await db.put("resources", dataToSave); // Save to IndexedDB
-    } catch (error) {
-      console.error("Error saving to IndexedDB:", error);
-    }
+  // Ensure the resource has an `id`
+  const dataToSave = {
+    ...resourceData,
+    id: resourceData.id || Date.now(), // Generate an ID if missing
+    isSynced,
   };
-  
+
+  try {
+    const db = await dbPromise;
+    await db.put("resources", dataToSave); // Save to IndexedDB
+    console.log("Resource saved successfully:", dataToSave);
+  } catch (error) {
+    console.error("Error saving to IndexedDB:", error);
+  }
+};
+
 
 export const saveUserData = async (user) => {
     try {
