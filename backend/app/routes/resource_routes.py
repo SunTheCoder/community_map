@@ -17,7 +17,6 @@ def create_resource():
         location=data.get('location'),
         type=data.get('type'),
         accessibility=data.get('accessibility'),
-        comments=data.get('comments'),
         description=data.get('description'),
         votes_accuracy=data.get('votes_accuracy'),
         votes_verified=data.get('votes_verified'),
@@ -32,6 +31,34 @@ def create_resource():
     db.session.add(new_resource)
     db.session.commit()
     return jsonify({"message": "Resource created"}), 201
+
+
+@resource_bp.route('/resources/<int:resource_id>/comments', methods=['GET'])
+def get_comments(resource_id):
+    resource = Resource.query.get_or_404(resource_id)
+    comments = resource.comments  # Use the relationship to fetch comments
+    return jsonify([comment.serialize() for comment in comments]), 200
+
+
+
+@resource_bp.route('/resources/<int:resource_id>/comments', methods=['POST'])
+@jwt_required()
+def add_comment(resource_id):
+    user_id = get_jwt_identity()
+    data = request.json
+
+    # Ensure the resource exists
+    resource = Resource.query.get_or_404(resource_id)
+
+    # Create a new comment
+    new_comment = Comment(
+        user_id=user_id,
+        resource_id=resource.id,
+        content=data.get('content')
+    )
+    db.session.add(new_comment)
+    db.session.commit()
+    return jsonify(new_comment.serialize()), 201
 
 
 @resource_bp.route('/resources', methods=['GET'])

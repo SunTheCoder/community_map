@@ -1,7 +1,7 @@
 
 
 import React, { useState, useCallback } from 'react';
-import { Box, Flex, Button, Input, FormControl, FormLabel, useColorModeValue, CloseButton, FormHelperText, Select } from "@chakra-ui/react";
+import { Box, Flex, Button, Input, FormControl, FormLabel, useColorModeValue, CloseButton, FormHelperText, Select, Modal, ModalBody, ModalContent, ModalOverlay } from "@chakra-ui/react";
 // import { CloseButton } from "@/components/ui/close-button"
 
 import axios from 'axios';
@@ -110,18 +110,10 @@ const AddResourceModal = ({ isOpen, onClose, onSave }) => {
   if (!isOpen) return null;
 
   return (
-    <Flex
-      position="fixed"
-      top="0"
-      left="0"
-      right="0"
-      bottom="0"
-      background={overlayBg}
-      justifyContent="center"
-      alignItems="center"
-      zIndex="1000"
-      onClick={onClose}
-    >
+    <Modal isOpen={isOpen} onClose={onClose}>
+  <ModalOverlay />
+  <ModalContent>
+
       <Box
         background={bgColor}
         padding="20px"
@@ -193,7 +185,9 @@ const AddResourceModal = ({ isOpen, onClose, onSave }) => {
           <Button type="submit" colorScheme="blue" mt={4}>Save Resource</Button>
         </form>
       </Box>
-    </Flex>
+    </ModalContent>
+    </Modal>
+
   );
 };
 

@@ -36,8 +36,6 @@ class Resource(db.Model):
     location = db.Column(db.String(200), nullable=False)
     type = db.Column(db.String(50), nullable=False)
     accessibility = db.Column(db.String(100))
-    accuracy = db.Column(db.Boolean, default=False)
-    community_verified = db.Column(db.Boolean, default=False)
     description = db.Column(db.Text)
     votes_accuracy = db.Column(db.Integer, default=0)
     votes_verified = db.Column(db.Integer, default=0)
@@ -49,7 +47,8 @@ class Resource(db.Model):
     zip_code = db.Column(db.String(10), nullable=False)
     phone_number = db.Column(db.String(20))
 
-    comments = db.relationship('Comment', back_populates='resource', lazy=True)
+    # Relationship to comments
+    comments = db.relationship('Comment', back_populates='resource', lazy=True, cascade="all, delete-orphan")
 
     def serialize(self):
         return {
@@ -58,8 +57,6 @@ class Resource(db.Model):
             "location": self.location,
             "type": self.type,
             "accessibility": self.accessibility,
-            "accuracy": self.accuracy,
-            "community_verified": self.community_verified,
             "description": self.description,
             "votes_accuracy": self.votes_accuracy,
             "votes_verified": self.votes_verified,
@@ -69,7 +66,8 @@ class Resource(db.Model):
             "city": self.city,
             "state": self.state,
             "zip_code": self.zip_code,
-            "phone_number": self.phone_number
+            "phone_number": self.phone_number,
+            "comments": [comment.serialize() for comment in self.comments]  # Include comments in serialization
         }
 
 
@@ -78,30 +76,22 @@ class Comment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     resource_id = db.Column(db.Integer, db.ForeignKey('resources.id'), nullable=False)
-    comment_text = db.Column(db.Text, nullable=False)
-    image_url = db.Column(db.String(255))  # Optional URL to an image associated with the comment
+    content = db.Column(db.Text, nullable=False)
     created_at = db.Column(db.DateTime, server_default=db.func.now())
 
+    # Relationships
     resource = db.relationship('Resource', back_populates='comments')
     user = db.relationship('User', backref=db.backref('comments', lazy=True))
-
-    replies = db.relationship(
-        'Reply',
-        primaryjoin="and_(foreign(Reply.record_id) == Comment.id, Reply.record_type == 'comment')",
-        backref="comment",
-        lazy=True,
-        overlaps="post,replies"
-    )
 
     def serialize(self):
         return {
             "id": self.id,
             "user_id": self.user_id,
             "resource_id": self.resource_id,
-            "comment_text": self.comment_text,
-            "image_url": self.image_url,
+            "content": self.content,
             "created_at": self.created_at
         }
+
 
 class Notification(db.Model):
     __tablename__ = 'notifications'
