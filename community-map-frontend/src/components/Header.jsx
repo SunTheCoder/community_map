@@ -258,10 +258,10 @@ const Header = () => {
               <ResourceList resources={resources} refresh={refresh}/>
             </Box>
             <VStack m={2}>
-              <Button onClick={openProfile}>Add Resource</Button>
+              <Button onClick={openModal}>Add Resource</Button>
               <FindLocation resources={resources} updateMapCenter={updateMapCenter} />
             </VStack>
-            <AddResourceModal isOpen={isModalOpen} onClose={closeProfile} onSave={handleSave} />
+            <AddResourceModal isOpen={isModalOpen} onClose={closeModal} onSave={handleSave} />
           </TabPanel>
         </TabPanels>
       </Tabs>

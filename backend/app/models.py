@@ -125,6 +125,7 @@ class Post(db.Model):
     replies = db.relationship(
         'Reply',
         primaryjoin="and_(foreign(Reply.record_id) == Post.id, Reply.record_type == 'post')",
+        cascade="all, delete-orphan",
         backref="post",
         lazy=True,
         overlaps="comment,replies"
