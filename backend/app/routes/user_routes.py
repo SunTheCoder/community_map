@@ -40,7 +40,7 @@ def login():
         return jsonify({"error": "Username and password are required"}), 400
     
     user = User.query.filter_by(username=data['username']).first()
-    
+    print("User:", user)  # Debugging line
     if user and user.check_password(data['password']):
         # Generate a JWT token
         access_token = create_access_token(identity=user.id)
@@ -79,6 +79,34 @@ def delete_user(user_id):
         db.session.rollback()
         current_app.logger.error(f"Error deleting user {user_id}: {str(e)}")
         return jsonify({"error": "An error occurred while deleting the user"}), 500
+    
+
+@user_bp.route('/users/<int:user_id>/profile', methods=['GET'])
+@jwt_required()
+def get_user_profile(user_id):
+    current_user_id = get_jwt_identity()
+
+    # Ensure the user is requesting their own profile or has admin rights
+    if current_user_id != user_id:
+        current_user = User.query.get(current_user_id)
+        if not current_user.is_admin:
+            return jsonify({"error": "Unauthorized"}), 403
+
+    # Fetch the user
+    user = User.query.get(user_id)
+    if not user:
+        return jsonify({"error": "User not found"}), 404
+
+    # Fetch posts and replies
+    posts = [post.serialize() for post in user.posts]
+    replies = [reply.serialize() for reply in user.replies]
+
+    return jsonify({
+        "user": user.serialize(),
+        "posts": posts,
+        "replies": replies
+    })
+
 
 
 

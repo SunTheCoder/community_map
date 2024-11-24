@@ -18,7 +18,9 @@ import FindLocation from "./FindLocation";
 import LoginSignupForm from "./LoginSignupForm";
 import UserMenu from "./UserMenu";
 import AdminPanel from "./AdminPanel";
+import { motion } from "framer-motion";
 
+const MotionModalContent = motion(ModalContent);
 const Header = () => {
   const { colorMode, toggleColorMode } = useColorMode();
   const dispatch = useDispatch();
@@ -164,7 +166,13 @@ const Header = () => {
     setIsProfileModalOpen(true);
   };
 
- 
+  // const openModal = () => setIsProfileModalOpen(true);
+  // const closeModal = () => setIsProfileModalOpen(false);
+
+  const closeProfile = () => {
+
+    setIsProfileModalOpen(false);
+  }
 
   return (
     <>
@@ -250,10 +258,10 @@ const Header = () => {
               <ResourceList resources={resources} refresh={refresh}/>
             </Box>
             <VStack m={2}>
-              <Button onClick={openModal}>Add Resource</Button>
+              <Button onClick={openProfile}>Add Resource</Button>
               <FindLocation resources={resources} updateMapCenter={updateMapCenter} />
             </VStack>
-            <AddResourceModal isOpen={isModalOpen} onClose={closeModal} onSave={handleSave} />
+            <AddResourceModal isOpen={isModalOpen} onClose={closeProfile} onSave={handleSave} />
           </TabPanel>
         </TabPanels>
       </Tabs>
@@ -263,7 +271,13 @@ const Header = () => {
     {/* CreatePost Modal */}
     <Modal isOpen={isCreatePostModalOpen} onClose={() => setIsCreatePostModalOpen(false)}>
         <ModalOverlay />
-        <ModalContent>
+        <ModalContent
+          position="relative" // Allows positioning for transitions
+          top={isProfileModalOpen ? "0" : "-50px"} // Slide down from -50px
+          opacity={isProfileModalOpen ? 1 : 0} // Fade in/out
+          transform={isProfileModalOpen ? "scale(1)" : "scale(0.80)"} // Slight scale for effect
+          transition="top 0.3s ease-in-out, opacity 0.8s ease-in-out, transform 0.3s ease-in-out" // Smooth transitions
+        >
           <ModalHeader fontSize={25}>Create a New Post</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
@@ -275,15 +289,24 @@ const Header = () => {
         </ModalContent>
       </Modal>
 
-      <Modal isOpen={isProfileModalOpen} onClose={() => setIsProfileModalOpen(false)}>
-            <ModalOverlay />
-            <ModalContent>
-              <ModalHeader fontSize={25}>Profile</ModalHeader>
-              <ModalCloseButton />
-              <ModalBody>
-                <Profile user={user} />
-              </ModalBody>
-            </ModalContent>
+      <Modal isOpen={isProfileModalOpen} onClose={closeProfile} isCentered>
+        {/* Overlay */}
+        <ModalOverlay />
+
+        {/* Modal Content with Chakra transitions */}
+        <ModalContent
+          position="relative" // Allows positioning for transitions
+          top={isProfileModalOpen ? "0" : "150px"} // Slide down from -50px
+          opacity={isProfileModalOpen ? 1 : 0} // Fade in/out
+          transform={isProfileModalOpen ? "scale(1)" : "scale(0.80)"} // Slight scale for effect
+          transition="top 0.3s ease-in-out, opacity 0.8s ease-in-out, transform 0.3s ease-in-out" // Smooth transitions
+        >
+          <ModalHeader fontSize={25}>Profile</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <Profile user={user} />
+          </ModalBody>
+        </ModalContent>
       </Modal>
 
   

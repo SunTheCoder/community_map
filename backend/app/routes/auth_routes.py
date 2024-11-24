@@ -42,3 +42,14 @@ def auth():
             db.session.rollback()
             current_app.logger.error(f"Error creating account: {str(e)}")
             return jsonify({"error": "An error occurred while creating the account"}), 500
+        
+@auth_bp.route('/auth/user', methods=['GET'])
+@jwt_required()
+def get_current_user():
+    current_user_id = get_jwt_identity()
+    user = User.query.get(current_user_id)
+
+    if not user:
+        return jsonify({"error": "User not found"}), 404
+
+    return jsonify(user.serialize())
