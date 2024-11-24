@@ -53,7 +53,7 @@ const Profile = () => {
   }
 
   return (
-    <Box maxWidth="800px" margin="auto" padding={4}>
+    <Box maxWidth="800px" margin="auto" padding={4} >
   <Heading as="h1" size="xl" mb={4}>{userData.username}'s Profile</Heading>
   <Text fontSize="lg" mb={6}>Welcome to your profile page, {userData.username}!</Text>
 

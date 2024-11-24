@@ -131,7 +131,8 @@ const LoginSignupForm = () => {
   const isValidZipCode = (zip) => /^\d{5}(-\d{4})?$/.test(zip);
 
   return (
-    <Box maxW="sm" mx="auto" p={6} boxShadow="lg" borderRadius="md">
+    <Box maxW="sm" mx="auto" p={6} boxShadow="lg" borderRadius="md" 
+>
       <Heading as="h2" size="lg" textAlign="center" mb={4}>
         Welcome
       </Heading>

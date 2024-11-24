@@ -272,13 +272,13 @@ const Header = () => {
     <Modal isOpen={isCreatePostModalOpen} onClose={() => setIsCreatePostModalOpen(false)}>
         <ModalOverlay />
         <ModalContent
-          position="relative" // Allows positioning for transitions
-          top={isProfileModalOpen ? "0" : "-50px"} // Slide down from -50px
-          opacity={isProfileModalOpen ? 1 : 0} // Fade in/out
-          transform={isProfileModalOpen ? "scale(1)" : "scale(0.80)"} // Slight scale for effect
-          transition="top 0.3s ease-in-out, opacity 0.8s ease-in-out, transform 0.3s ease-in-out" // Smooth transitions
+          position="absolute" // Allows positioning for transitions
+          top={"100px"} // Slide down from -50px
+          opacity={isCreatePostModalOpen ? 1 : 0} // Fade in/out
+          transform={isCreatePostModalOpen ? "scale(1)" : "scale(0.80)"} // Slight scale for effect
+          transition="top 0.8s ease-in-out, opacity 1.0s ease-in-out, transform 0.8s ease-in-out" // Smooth transitions
         >
-          <ModalHeader fontSize={25}>Create a New Post</ModalHeader>
+          {/* <ModalHeader fontSize={25}>Create a New Post</ModalHeader> */}
           <ModalCloseButton />
           <ModalBody>
             <CreatePost onPostCreated={(post) => {
@@ -289,19 +289,19 @@ const Header = () => {
         </ModalContent>
       </Modal>
 
-      <Modal isOpen={isProfileModalOpen} onClose={closeProfile} isCentered>
+      <Modal isOpen={isProfileModalOpen} onClose={closeProfile} isCentered >
         {/* Overlay */}
         <ModalOverlay />
 
         {/* Modal Content with Chakra transitions */}
         <ModalContent
-          position="relative" // Allows positioning for transitions
-          top={isProfileModalOpen ? "0" : "150px"} // Slide down from -50px
+          position="absolute" // Allows positioning for transitions
+          top={"100px"} // Slide down from -50px
           opacity={isProfileModalOpen ? 1 : 0} // Fade in/out
           transform={isProfileModalOpen ? "scale(1)" : "scale(0.80)"} // Slight scale for effect
-          transition="top 0.3s ease-in-out, opacity 0.8s ease-in-out, transform 0.3s ease-in-out" // Smooth transitions
+          transition="top 0.3s ease-in-out, opacity 1.0s ease-in-out, transform 0.3s ease-in-out" // Smooth transitions
         >
-          <ModalHeader fontSize={25}>Profile</ModalHeader>
+          {/* <ModalHeader fontSize={25}>Profile</ModalHeader> */}
           <ModalCloseButton />
           <ModalBody>
             <Profile user={user} />
