@@ -1,36 +1,30 @@
 import React, { useEffect, useState } from "react";
-// import axios from "axios";
-import { Text, Box, List, ListItem, Spinner, Center, VStack, Heading } from "@chakra-ui/react";
+import { Text, Box, VStack, Heading, Button, Textarea, Input, useToast } from "@chakra-ui/react";
 import { useSelector } from "react-redux";
 import api from '../api/api';
 
 const Profile = () => {
-  const [userData, setUserData] = useState(null); // Store full user data including id
+  const [userData, setUserData] = useState(null);
   const [posts, setPosts] = useState([]);
   const [replies, setReplies] = useState([]);
+  const [editingPost, setEditingPost] = useState(null); // Tracks the post being edited
+  const [editingReply, setEditingReply] = useState(null); // Tracks the reply being edited
   const [loading, setLoading] = useState(true);
+  const toast = useToast();
 
-  // Get the token from Redux state
   const { token } = useSelector((state) => state.auth);
 
   useEffect(() => {
-    // Fetch user profile data
     const fetchUserProfile = async () => {
       try {
-        // Fetch user info first
         const userResponse = await api.get(`/auth/user`, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}` // Use Redux token if available
-          }
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         });
-        const user = userResponse.data; // Assuming the response contains user data including `id`
+        const user = userResponse.data;
         setUserData(user);
-        console.log("Fetched user profile:", user);
-        // Fetch posts and replies based on user ID
+
         const profileResponse = await api.get(`/users/${user.id}/profile`, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         });
         setPosts(profileResponse.data.posts || []);
         setReplies(profileResponse.data.replies || []);
@@ -44,63 +38,194 @@ const Profile = () => {
     fetchUserProfile();
   }, []);
 
-  if (loading) {
-    return <p>Loading...</p>;
-  }
+  const handleEditPost = (post) => {
+    setEditingPost(post); // Set the post being edited
+  };
 
-  if (!userData) {
-    return <p>Error loading user data.</p>;
-  }
+  const handleEditReply = (reply) => {
+    setEditingReply(reply); // Set the reply being edited
+  };
+
+  const handleUpdatePost = async () => {
+    try {
+      const response = await api.put(`/posts/${editingPost.id}`, {
+        title: editingPost.title,
+        content: editingPost.content,
+      });
+      setPosts((prev) =>
+        prev.map((post) =>
+          post.id === editingPost.id ? response.data : post
+        )
+      );
+      toast({ title: "Post updated successfully", status: "success" });
+      setEditingPost(null);
+    } catch (error) {
+      console.error("Error updating post:", error);
+      toast({ title: "Failed to update post", status: "error" });
+    }
+  };
+
+  const handleUpdateReply = async () => {
+    try {
+      const response = await api.put(`/replies/${editingReply.id}`, {
+        content: editingReply.content,
+      });
+      setReplies((prev) =>
+        prev.map((reply) =>
+          reply.id === editingReply.id ? response.data : reply
+        )
+      );
+      toast({ title: "Reply updated successfully", status: "success" });
+      setEditingReply(null);
+    } catch (error) {
+      console.error("Error updating reply:", error);
+      toast({ title: "Failed to update reply", status: "error" });
+    }
+  };
+
+  const handleDeletePost = async (postId) => {
+    try {
+      await api.delete(`/posts/${postId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setPosts((prev) => prev.filter((post) => post.id !== postId));
+      toast({ title: "Post deleted successfully", status: "success" });
+    } catch (error) {
+      console.error("Error deleting post:", error);
+      toast({ title: "Failed to delete post", status: "error" });
+    }
+  };
+
+  const handleDeleteReply = async (replyId) => {
+    try {
+      await api.delete(`/replies/${replyId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setReplies((prev) => prev.filter((reply) => reply.id !== replyId));
+      toast({ title: "Reply deleted successfully", status: "success" });
+    } catch (error) {
+      console.error("Error deleting reply:", error);
+      toast({ title: "Failed to delete reply", status: "error" });
+    }
+  };
+
+  if (loading) return <p>Loading...</p>;
+  if (!userData) return <p>Error loading user data.</p>;
 
   return (
-    <Box maxWidth="800px" margin="auto" padding={4} >
-  <Heading as="h1" size="xl" mb={4}>{userData.username}'s Profile</Heading>
-  <Text fontSize="lg" mb={6}>Welcome to your profile page, {userData.username}!</Text>
+    <Box maxWidth="800px" margin="auto" padding={4}>
+      <Heading as="h1" size="xl" mb={4}>{userData.username}'s Profile</Heading>
 
-  <Box mb={8}>
-    <Heading as="h2" size="lg" mb={3}>Your Details</Heading>
-    <Text>ID: {userData.id}</Text>
-    <Text>Email: {userData.email || "Please Add Email"}</Text>
-  </Box>
+      <Text fontSize="lg" mb={6}>Welcome to your profile page, {userData.username}!</Text>
 
-  <Box mb={8}>
-    <Heading as="h2" size="lg" mb={3}>Your Posts</Heading>
-    {posts.length > 0 ? (
-      <VStack spacing={4} align="stretch">
-        {posts.map((post) => (
-          <Box key={post.id} p={4} borderWidth={1} borderRadius="md">
-            <Heading as="h3" size="md" mb={2}>{post.title}</Heading>
-            <Text mb={2}>{post.content}</Text>
-            <Text fontSize="sm" color="gray.500">
-              Created At: {new Date(post.created_at).toLocaleString()}
-            </Text>
-          </Box>
-        ))}
-      </VStack>
-    ) : (
-      <Text>You haven't created any posts yet.</Text>
-    )}
-  </Box>
+      <Box mb={8}>
+        <Heading as="h2" size="lg" mb={3}>Your Posts</Heading>
+        {posts.length > 0 ? (
+          <VStack spacing={4} align="stretch">
+            {posts.map((post) =>
+              editingPost && editingPost.id === post.id ? (
+                <Box key={post.id} p={4} borderWidth={1} borderRadius="md">
+                  <Input
+                    value={editingPost.title}
+                    onChange={(e) =>
+                      setEditingPost({ ...editingPost, title: e.target.value })
+                    }
+                    mb={2}
+                  />
+                  <Textarea
+                    value={editingPost.content}
+                    onChange={(e) =>
+                      setEditingPost({ ...editingPost, content: e.target.value })
+                    }
+                  />
+                  <Button mt={2} colorScheme="teal" onClick={handleUpdatePost}>
+                    Save
+                  </Button>
+                  <Button
+                    mt={2}
+                    ml={2}
+                    onClick={() => setEditingPost(null)}
+                  >
+                    Cancel
+                  </Button>
+                </Box>
+              ) : (
+                <Box key={post.id} p={4} borderWidth={1} borderRadius="md">
+                  <Heading as="h3" size="md" mb={2}>{post.title}</Heading>
+                  <Text mb={2}>{post.content}</Text>
+                  <Button
+                    size="sm"
+                    onClick={() => handleEditPost(post)}
+                  >
+                    Edit
+                  </Button>
+                  <Button
+                    size="sm"
+                    colorScheme="red"
+                    ml={2}
+                    onClick={() => handleDeletePost(post.id)}
+                  >
+                    Delete
+                  </Button>
+                </Box>
+              )
+            )}
+          </VStack>
+        ) : (
+          <Text>You haven't created any posts yet.</Text>
+        )}
+      </Box>
 
-  <Box>
-    <Heading as="h2" size="lg" mb={3}>Your Replies</Heading>
-    {replies.length > 0 ? (
-      <VStack spacing={4} align="stretch">
-        {replies.map((reply) => (
-          <Box key={reply.id} p={4} borderWidth={1} borderRadius="md">
-            <Text mb={2}>{reply.content}</Text>
-            <Text fontSize="sm" color="gray.500">
-              Replied to a {reply.record_type} (ID: {reply.record_id}) on{" "}
-              {new Date(reply.created_at).toLocaleString()}
-            </Text>
-          </Box>
-        ))}
-      </VStack>
-    ) : (
-      <Text>You haven't replied to anything yet.</Text>
-    )}
-  </Box>
-</Box>
+      <Box>
+        <Heading as="h2" size="lg" mb={3}>Your Replies</Heading>
+        {replies.length > 0 ? (
+          <VStack spacing={4} align="stretch">
+            {replies.map((reply) =>
+              editingReply && editingReply.id === reply.id ? (
+                <Box key={reply.id} p={4} borderWidth={1} borderRadius="md">
+                  <Textarea
+                    value={editingReply.content}
+                    onChange={(e) =>
+                      setEditingReply({ ...editingReply, content: e.target.value })
+                    }
+                  />
+                  <Button mt={2} colorScheme="teal" onClick={handleUpdateReply}>
+                    Save
+                  </Button>
+                  <Button
+                    mt={2}
+                    ml={2}
+                    onClick={() => setEditingReply(null)}
+                  >
+                    Cancel
+                  </Button>
+                </Box>
+              ) : (
+                <Box key={reply.id} p={4} borderWidth={1} borderRadius="md">
+                  <Text mb={2}>{reply.content}</Text>
+                  <Button
+                    size="sm"
+                    onClick={() => handleEditReply(reply)}
+                  >
+                    Edit
+                  </Button>
+                  <Button
+                    size="sm"
+                    colorScheme="red"
+                    ml={2}
+                    onClick={() => handleDeleteReply(reply.id)}
+                  >
+                    Delete
+                  </Button>
+                </Box>
+              )
+            )}
+          </VStack>
+        ) : (
+          <Text>You haven't replied to anything yet.</Text>
+        )}
+      </Box>
+    </Box>
   );
 };
 
