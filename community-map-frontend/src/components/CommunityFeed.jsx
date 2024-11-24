@@ -1,12 +1,33 @@
 import React, { useEffect, useState } from "react";
-import { Box, VStack, Text, Image, Button, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, useToast, Spinner, Center } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Textarea,
+  VStack,
+  Text,
+  Image,
+  IconButton,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalCloseButton,
+  ModalBody,
+  useToast,
+  Spinner,
+  Center,
+  Flex,
+} from "@chakra-ui/react";
+import { FaTrash, FaEdit } from "react-icons/fa";
 import ReplyForm from "./ReplyForm";
 import api from "../api/api";
 
 const CommunityFeed = ({ posts, loading }) => {
   const [isReplyModalOpen, setIsReplyModalOpen] = useState(false);
   const [selectedPostId, setSelectedPostId] = useState(null);
+  const [editingPost, setEditingPost] = useState(null); // Post being edited
   const [postReplies, setPostReplies] = useState({}); // Store replies for each post
+  const toast = useToast();
 
   const openReplyModal = (postId) => {
     setSelectedPostId(postId);
@@ -27,7 +48,41 @@ const CommunityFeed = ({ posts, loading }) => {
     }
   };
 
-  // Fetch replies for each post when the component mounts or `posts` change
+  const handleDeletePost = async (postId) => {
+    try {
+      await api.delete(`/posts/${postId}`);
+      toast({ title: "Post deleted successfully", status: "success" });
+    } catch (error) {
+      console.error("Error deleting post:", error);
+      toast({ title: "Failed to delete post", status: "error" });
+    }
+  };
+
+  const handleDeleteReply = async (replyId) => {
+    try {
+      await api.delete(`/replies/${replyId}`);
+      toast({ title: "Reply deleted successfully", status: "success" });
+    } catch (error) {
+      console.error("Error deleting reply:", error);
+      toast({ title: "Failed to delete reply", status: "error" });
+    }
+  };
+
+  const handleEditPost = (post) => {
+    setEditingPost(post);
+  };
+
+  const saveEditedPost = async () => {
+    try {
+      await api.put(`/posts/${editingPost.id}`, { content: editingPost.content });
+      toast({ title: "Post updated successfully", status: "success" });
+      setEditingPost(null);
+    } catch (error) {
+      console.error("Error updating post:", error);
+      toast({ title: "Failed to update post", status: "error" });
+    }
+  };
+
   useEffect(() => {
     posts.forEach((post) => fetchReplies(post.id));
   }, [posts]);
@@ -44,16 +99,36 @@ const CommunityFeed = ({ posts, loading }) => {
       ) : (
         <VStack spacing={4} align="stretch">
           {posts.map((post) => (
-            <Box
-              key={post.id}
-              p={4}
-              boxShadow="md"
-              borderRadius="md"
-              borderWidth="1px"
-            >
-              <Text fontSize="xl" fontWeight="bold">
-                {post.title}
-              </Text>
+            <Box key={post.id} p={4} boxShadow="md" borderRadius="md" borderWidth="1px">
+              <Flex justifyContent="space-between" alignItems="center">
+                {editingPost && editingPost.id === post.id ? (
+                  <Textarea
+                    value={editingPost.content}
+                    onChange={(e) =>
+                      setEditingPost({ ...editingPost, content: e.target.value })
+                    }
+                    mb={2}
+                  />
+                ) : (
+                  <Text fontSize="xl" fontWeight="bold">
+                    {post.title}
+                  </Text>
+                )}
+                <Flex gap={2}>
+                  <IconButton
+                    size="sm"
+                    icon={<FaEdit />}
+                    aria-label="Edit Post"
+                    onClick={() => handleEditPost(post)}
+                  />
+                  <IconButton
+                    size="sm"
+                    icon={<FaTrash />}
+                    aria-label="Delete Post"
+                    onClick={() => handleDeletePost(post.id)}
+                  />
+                </Flex>
+              </Flex>
               <Text fontSize="md" color="gray.600">
                 {post.content}
               </Text>
@@ -82,10 +157,25 @@ const CommunityFeed = ({ posts, loading }) => {
                     w="full"
                     bg="gray.50"
                   >
-                    <Text fontSize="sm" fontWeight="bold" color="gray.600">
-                      Reply from {reply.username}:
-
-                    </Text>
+                    <Flex justifyContent="space-between" alignItems="center">
+                      <Text fontSize="sm" fontWeight="bold" color="gray.600">
+                        {reply.username}:
+                      </Text>
+                      <Flex gap={2}>
+                        <IconButton
+                          size="xs"
+                          icon={<FaEdit />}
+                          aria-label="Edit Reply"
+                          onClick={() => console.log("Edit Reply not implemented")}
+                        />
+                        <IconButton
+                          size="xs"
+                          icon={<FaTrash />}
+                          aria-label="Delete Reply"
+                          onClick={() => handleDeleteReply(reply.id)}
+                        />
+                      </Flex>
+                    </Flex>
                     <Text fontSize="sm" color="gray.600">
                       {reply.content}
                     </Text>

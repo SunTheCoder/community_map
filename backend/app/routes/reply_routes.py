@@ -82,7 +82,7 @@ def update_reply(reply_id):
 
 # Route to delete a reply
 @reply_bp.route('/replies/<int:reply_id>', methods=['DELETE'])
-# @jwt_required()
+@jwt_required()
 def delete_reply(reply_id):
     reply = Reply.query.get_or_404(reply_id)
     user_id = get_jwt_identity()
